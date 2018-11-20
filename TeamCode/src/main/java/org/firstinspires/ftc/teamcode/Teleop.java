@@ -71,12 +71,19 @@ public class Teleop extends OpMode {
         collection.slide(leftStickY2);
         lifter.lift(leftBumper1, dPadDown1);
 
+
+        if(robot.scoringSlide.getCurrentPosition() > 200) {
+            rightStickX1 /= 2;
+            leftStickX1 /= 2;
+            leftStickY1 /= 2;
+        }
+
         if(rightStickX1 == 0) {
             if(dPadLeft1) {
-                rightStickX1 = -0.4;
+                rightStickX1 = -0.3;
             }
             else if(dPadRight1) {
-                rightStickX1 = 0.4;
+                rightStickX1 = 0.3;
             }
         }
         driveTrain.orientedDrive(leftStickY1, leftStickX1, rightStickX1,x1);
