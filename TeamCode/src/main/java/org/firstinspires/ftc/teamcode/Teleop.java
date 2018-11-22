@@ -50,26 +50,45 @@ public class Teleop extends OpMode {
         double leftStickX1 = gamepad1.left_stick_x;
         double rightStickX1 = gamepad1.right_stick_x;
         boolean leftBumper1 = gamepad1.left_bumper;
+        boolean rightBumper1 = gamepad1.right_bumper;
         boolean dPadDown1 = gamepad1.dpad_down;
         boolean dPadRight1 = gamepad1.dpad_right;
         boolean dPadLeft1 = gamepad1.dpad_left;
         boolean x1 = gamepad1.x;
+        boolean leftTrigger1 = gamepad1.left_trigger > 0.3;
 
         //controller 2 input
         double leftStickY2 = gamepad2.left_stick_y;
         boolean leftBumper2 = gamepad2.left_bumper;
         boolean rightBumper2 = gamepad2.right_bumper;
         boolean x2 = gamepad2.x;
+        boolean y2 = gamepad2.y;
         boolean rightTrigger2 = gamepad2.right_trigger > 0.3;
         boolean leftTrigger2 = gamepad2.left_trigger > 0.3;
 
         mineralScorer.slide(x2);
         mineralScorer.mineralBar(rightTrigger2);
+        mineralScorer.bop(y2);
         
         collection.wrist(leftTrigger2);
         collection.inTake(rightBumper2, leftBumper2);
-        collection.slide(leftStickY2);
-        lifter.lift(leftBumper1, dPadDown1);
+
+        if(leftBumper1) {
+            collection.slide(-1);
+        }else if(rightBumper1) {
+            collection.slide(1);
+        }else {
+            collection.slide(0);
+        }
+
+
+        lifter.lift(leftTrigger1, dPadDown1);
+
+        if(robot.scoringSlide.getCurrentPosition() > 200) {
+            rightStickX1 /= 2;
+            leftStickX1 /= 2;
+            leftStickY1 /= 2;
+        }
 
         if(rightStickX1 == 0) {
             if(dPadLeft1) {
@@ -82,6 +101,7 @@ public class Teleop extends OpMode {
         driveTrain.orientedDrive(leftStickY1, leftStickX1, rightStickX1,x1);
 
 
+        telemetry.addLine("--------IMU--------");
         telemetry.addData("imu first angle", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
         telemetry.addData("imu heading", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
         telemetry.addData("imu system calibrated", robot.imu.isSystemCalibrated());

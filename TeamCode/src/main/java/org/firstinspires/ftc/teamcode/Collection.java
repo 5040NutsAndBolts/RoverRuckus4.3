@@ -23,7 +23,7 @@ public class Collection {
      */
     public void wrist(boolean toggle) {
 
-        if(robot.collectionSlide.getCurrentPosition()<20) {
+        if(robot.collectionSlide.getCurrentPosition()<10) {
             robot.wrist.setTargetPosition(0);
 
             if(robot.wrist.getCurrentPosition() >10)
@@ -35,16 +35,16 @@ public class Collection {
         }
         else if(!wristDown) {
             robot.wrist.setPower(0.5);
-            robot.wrist.setTargetPosition(340);
+            robot.wrist.setTargetPosition(370);
         }
         else {
             robot.wrist.setTargetPosition(670);
             robot.wrist.setPower(0.3);
         }
-        if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>20) {
+        if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>10) {
             wristToggle = true;
 
-            if(robot.wrist.getCurrentPosition() > 360) {
+            if(robot.wrist.getCurrentPosition() > 400) {
                 wristDown = false;
             }
             else {
@@ -82,11 +82,11 @@ public class Collection {
      */
     public  void slide(double stick) {
         if(stick < -0.1) {
-            robot.collectionSlide.setPower(stick);
+            robot.collectionSlide.setPower(1);
             robot.collectionSlide.setTargetPosition(940);
         }
         else if(stick > 0.1) {
-            robot.collectionSlide.setPower(stick);
+            robot.collectionSlide.setPower(1);
             if(robot.collectionSlide.getCurrentPosition() > 10) {
                 robot.collectionSlide.setTargetPosition(-100);
             }

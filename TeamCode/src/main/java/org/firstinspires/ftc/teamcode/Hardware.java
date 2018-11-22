@@ -25,8 +25,7 @@ public class Hardware {
     //scoring mechanism
     public DcMotor scoringSlide = null;
     public Servo blockingBar = null;
-    public ColorSensor leftColorSens = null;
-    public ColorSensor rightColorSens = null;
+    public Servo bopper = null;
 
     //drive train motors
     public DcMotor leftDriveFront = null;
@@ -69,8 +68,7 @@ public class Hardware {
         scoringSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         blockingBar = hwMap.servo.get("blockingBar");
-        leftColorSens = hwMap.colorSensor.get("leftColorSens");
-        rightColorSens = hwMap.colorSensor.get("rightColorSens");
+        bopper = hwMap.servo.get("bopper");
 
         //hanging mechanism
         hangingMotor = hwMap.dcMotor.get("hangingMotor");
