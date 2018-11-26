@@ -41,7 +41,7 @@ class AutoMethods extends LinearOpMode {
         detector.ratioScorer.perfectRatio = 1.0;
     }
 
-    public void runToWaitForward(int forwardAmount,Hardware robot, MecanumDrive driveTrain) {
+    public void runToForwardWait(int forwardAmount,Hardware robot, MecanumDrive driveTrain) {
         double power = 0;
         driveTrain.powerSet(power);
         driveTrain.forwardInch(forwardAmount);
@@ -69,7 +69,7 @@ class AutoMethods extends LinearOpMode {
         }
     }
 
-    public void runToWaitSideways(int sidewaysAmount,Hardware robot, MecanumDrive driveTrain) {
+    public void runToSidewaysWait(int sidewaysAmount,Hardware robot, MecanumDrive driveTrain) {
         double power = 0;
         driveTrain.powerSet(power);
         driveTrain.sidewaysInch(sidewaysAmount);
@@ -97,7 +97,7 @@ class AutoMethods extends LinearOpMode {
         }
     }
 
-    public void runToWaitRotate(int rotateAmount,Hardware robot, MecanumDrive driveTrain) {
+    public void runToRotateWait(int rotateAmount,Hardware robot, MecanumDrive driveTrain) {
         double power = 0;
         driveTrain.powerSet(power);
         driveTrain.rotate(rotateAmount);
@@ -336,11 +336,11 @@ class AutoMethods extends LinearOpMode {
         }
 
         //moves hook off the lander
-        runToWaitForward(-5,robot,driveTrain);
+        runToForwardWait(-5,robot,driveTrain);
         robot.hangingMotor.setTargetPosition(0);
 
         //moves away from hook
-        runToWaitSideways(5,robot,driveTrain);
+        runToSidewaysWait(5,robot,driveTrain);
         return goldPos;
     }
 }

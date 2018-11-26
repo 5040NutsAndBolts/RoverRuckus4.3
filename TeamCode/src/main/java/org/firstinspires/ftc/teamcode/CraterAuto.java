@@ -22,7 +22,6 @@ public class CraterAuto extends AutoMethods {
         wait = new ElapsedTime();
 
         double power;
-        int goldPos = 3;
 
         robot.init(hardwareMap);
 
@@ -48,53 +47,8 @@ public class CraterAuto extends AutoMethods {
         robot.collectionSlide.setPower(0.3);
         robot.collectionSlide.setTargetPosition(0);
 
-        //lowers hang mechanism
-        lifter.lift(true,false);
-        while(opModeIsActive() && robot.hangingMotor.getCurrentPosition() < 6800) {
-            //scans for gold mineral spot
-            if(robot.hangingMotor.getCurrentPosition() < 200) {
-                if (detector.getXPosition() > 200) {
-                    goldPos = 2;
-                } else if (detector.getXPosition() > 10) {
-                    goldPos = 1;
-                }
-            }
 
-            telemetry.addData("detector aligned", detector.getAligned());
-            telemetry.addData("wait seconds",wait.seconds());
-            telemetry.addData("goldPos",goldPos);
-            telemetry.addData("x pos of gold", detector.getXPosition());
-            telemetry.addData("hanging slide power", robot.hangingMotor.getPower());
-            telemetry.addData("hanging motor pos",robot.hangingMotor.getCurrentPosition());
-            telemetry.update();
-        }
-        detector.disable();
-
-        //moves hook off the lander
-        power = 0;
-        driveTrain.powerSet(power);
-        driveTrain.forwardInch(-5);
-        while(robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-50 && opModeIsActive()) {
-            telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-            telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-            telemetry.update();
-            power += 0.05;
-            driveTrain.powerSet(power);
-        }
-        robot.hangingMotor.setTargetPosition(0);
-        robot.hangingMotor.setPower(1);
-
-        //moves away from hook
-        power = 0;
-        driveTrain.powerSet(power);
-        driveTrain.sidewaysInch(5);
-        while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+50 && opModeIsActive()) {
-            telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-            telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-            telemetry.update();
-            power += 0.05;
-            driveTrain.powerSet(power);
-        }
+        int goldPos = landing(robot,detector,driveTrain);
 
 
         //GOLD ON THE LEFT
