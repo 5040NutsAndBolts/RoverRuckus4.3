@@ -6,8 +6,9 @@ package org.firstinspires.ftc.teamcode;
 public class Collection {
 
     private Hardware robot;
-    private boolean wristToggle = false;
-    private boolean wristDown = true;
+
+    private boolean wristToggle = false;   //toggle for the wrist
+    private boolean wristDown = true;      //when true and slide is out the wrist will be down
 
     /**
      * sets up the hardware so you don't have to pass it as a parameter
@@ -23,24 +24,29 @@ public class Collection {
      */
     public void wrist(boolean toggle) {
 
+        //set the wrist up when slide is in
         if(robot.collectionSlide.getCurrentPosition()<10) {
             robot.wrist.setTargetPosition(0);
 
+            //throws wrist up so it puts minerals into scoring bucket
             if(robot.wrist.getCurrentPosition() >10)
                 robot.wrist.setPower(1);
             else
                 robot.wrist.setPower(0.3);
-
+            //will set the wrist all the way down when the slide is extended out
             wristDown = true;
         }
+        //sets wrist part way up
         else if(!wristDown) {
             robot.wrist.setPower(0.5);
             robot.wrist.setTargetPosition(370);
         }
+        //sets wrist all the way down
         else {
             robot.wrist.setTargetPosition(670);
             robot.wrist.setPower(0.3);
         }
+        //toggle for the wrist when toggle is true
         if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>10) {
             wristToggle = true;
 
@@ -68,9 +74,6 @@ public class Collection {
         else if(out) {
             robot.intake.setPower(0.5);
         }
-        /*else if(robot.collectionSlide.getCurrentPosition() <= 10) {
-            robot.intake.setPower(0.5);
-        }*/
         else{
             robot.intake.setPower(0);
         }
@@ -78,15 +81,16 @@ public class Collection {
 
     /**
      * controls the collectionSlide motor
-     * @param stick - when odd will extend out, when even will retract back in.
+     * @param in - when true will pull in slide
+     * @param out - when true will push out slide
      */
-    public  void slide(double stick) {
-        if(stick < -0.1) {
+    public  void slide(boolean in, boolean out) {
+        if(out) {
             robot.collectionSlide.setPower(1);
-            robot.collectionSlide.setTargetPosition(940);
+            robot.collectionSlide.setTargetPosition(1880);
         }
-        else if(stick > 0.1) {
-            robot.collectionSlide.setPower(1);
+        else if(in) {
+            robot.collectionSlide.setPower(0.5);
             if(robot.collectionSlide.getCurrentPosition() > 10) {
                 robot.collectionSlide.setTargetPosition(-100);
             }

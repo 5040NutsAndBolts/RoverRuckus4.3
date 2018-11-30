@@ -62,6 +62,11 @@ public class MecanumDrive {
         if(reset) {
             adjust = angles.firstAngle;
         }
+        if(robot.collectionSlide.getCurrentPosition() > 60) {
+            rotation /= 2;
+        } else {
+            rotation /= 1.5;
+        }
 
         double v5 = P * Math.sin(robotAngle - angles.firstAngle+adjust) + P * Math.cos(robotAngle - angles.firstAngle+adjust) - rotation;
         double v6 = P * Math.sin(robotAngle - angles.firstAngle+adjust) - P * Math.cos(robotAngle - angles.firstAngle+adjust) + rotation;

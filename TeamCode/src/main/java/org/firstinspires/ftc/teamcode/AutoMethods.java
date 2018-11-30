@@ -14,22 +14,23 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
+/**
+ * Class for auto methods. The methods in here have loops that are used in auto and need the parameter of opModeIsActive().
+ * The methods may also not fit into any other class such as the dogeCVSetup.
+ */
 @Disabled
 class AutoMethods extends LinearOpMode {
 
-
     @Override public void runOpMode() throws InterruptedException {}
 
-    public void Sample() {
-
-    }
+    /**
+     * sets up the detector for sampling
+     * @param detector - the DogeCV object for configuring
+     */
     public void dogeCVSetup(GoldAlignDetector detector) {
-       /*detector = new GoldAlignDetector();
-       detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-       detector.useDefaults();*/
-
         // Optional Tuning
-        detector.alignSize = 500; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignSize = 500; // How wide (in pixels) is the range in which the gold object will be aligned.
+                                  // (Represented by green bars in the preview)
         detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
@@ -41,11 +42,18 @@ class AutoMethods extends LinearOpMode {
         detector.ratioScorer.perfectRatio = 1.0;
     }
 
-    public void runToForwardWait(int forwardAmount,Hardware robot, MecanumDrive driveTrain) {
+    /**
+     * moves the robot forward so many inches while increasing speed.
+     * stays in loop until it reaches distance.
+     * @param forwardInches - how for forward it needs to go
+     * @param robot - the hardware object to move the motors
+     * @param driveTrain - the MecanumDrive object so it can use the forwardInch method
+     */
+    public void runToForwardWait(int forwardInches,Hardware robot, MecanumDrive driveTrain) {
         double power = 0;
         driveTrain.powerSet(power);
-        driveTrain.forwardInch(forwardAmount);
-        if(forwardAmount < 0) {
+        driveTrain.forwardInch(forwardInches);
+        if(forwardInches < 0) {
             while (robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-10 && opModeIsActive()) {
                 telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
                 telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -69,11 +77,18 @@ class AutoMethods extends LinearOpMode {
         }
     }
 
-    public void runToSidewaysWait(int sidewaysAmount,Hardware robot, MecanumDrive driveTrain) {
+    /**
+     * moves the robot sideways so many inches while increasing speed
+     * stays in loop until it reaches distance
+     * @param sidewaysInches - how far sideways it needs to go
+     * @param robot - the hardware object to move the motors
+     * @param driveTrain - the MecanumDrive object so it can use the sidewaysInch method
+     */
+    public void runToSidewaysWait(int sidewaysInches,Hardware robot, MecanumDrive driveTrain) {
         double power = 0;
         driveTrain.powerSet(power);
-        driveTrain.sidewaysInch(sidewaysAmount);
-        if(sidewaysAmount < 0) {
+        driveTrain.sidewaysInch(sidewaysInches);
+        if(sidewaysInches < 0) {
             while (robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-10 && opModeIsActive()) {
                 telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
                 telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -97,11 +112,18 @@ class AutoMethods extends LinearOpMode {
         }
     }
 
-    public void runToRotateWait(int rotateAmount,Hardware robot, MecanumDrive driveTrain) {
+    /**
+     * rotates the robot so many degrees while increasing speed
+     * stays in loop until it reaches rotation
+     * @param degrees - how many degrees it needs to rotate
+     * @param robot - the hardware object to move the motors
+     * @param driveTrain - the MecanumDrive object so it can use the rotate method
+     */
+    public void runToRotateWait(int degrees,Hardware robot, MecanumDrive driveTrain) {
         double power = 0;
         driveTrain.powerSet(power);
-        driveTrain.rotate(rotateAmount);
-        if(rotateAmount > 0) {
+        driveTrain.rotate(degrees);
+        if(degrees > 0) {
             while (robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-10 && opModeIsActive()) {
                 telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
                 telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -125,192 +147,13 @@ class AutoMethods extends LinearOpMode {
         }
     }
 
-    public void sampling(int goldPos, Hardware robot, MecanumDrive driveTrain) {
-        int power;
-        //GOLD ON THE LEFT
-        if(goldPos == 1) {
-            driveTrain.rotate(25);
-            power = 0;
-            while(robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-5 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-            //knocks off sample
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.sidewaysInch(20);
-            while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-            //drive into wall
-            driveTrain.rotate(25);
-            power = 0;
-            while(robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-5 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.forwardInch(-5);
-            while(robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.sidewaysInch(28);
-            while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-        }
-        //GOLD IN THE MIDDLE
-        else if(goldPos == 2) {
-            driveTrain.rotate(-30);
-            power = 0;
-            while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+10 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-            //knocks off sample
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.sidewaysInch(17);
-            while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-            //drive into wall
-            driveTrain.rotate(70);
-            power = 0;
-            while(robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-5 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.forwardInch(-20);
-            while(robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.sidewaysInch(35);
-            while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-        }
-        //GOLD ON THE RIGHT
-        else {
-            driveTrain.rotate(-55);
-            power = 0;
-            while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-            //knocks off sample
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.sidewaysInch(22);
-            while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-            //drive into wall
-            driveTrain.rotate(90);
-            power = 0;
-            while(robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-5 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.forwardInch(-29);
-            while(robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-            power = 0;
-            driveTrain.powerSet(power);
-            driveTrain.sidewaysInch(45);
-            while(robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+50 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos",robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos",robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("goldPos", goldPos);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-
-        }
-        robot.hangingMotor.setPower(0);
-    }
-
+    /**
+     *This method lands the robot and scans the minerals for where the gold one is located
+     * @param robot - the hardware object to move the motors
+     * @param detector - the DogeCV object for scannign the minerals
+     * @param driveTrain - the MecanumDrive object so it can use movements within those classes
+     * @return - returns what position the gold mineral is in, 1-is left,2-is middle,3-is right from the phone.
+     */
     public int landing(Hardware robot, GoldAlignDetector detector, MecanumDrive driveTrain) {
         int goldPos = 3;
         //lowers hang mechanism
@@ -326,6 +169,9 @@ class AutoMethods extends LinearOpMode {
                     goldPos = 1;
                     detector.disable();
                 }
+            }
+            else {
+                detector.disable();
             }
             telemetry.addData("detector aligned", detector.getAligned());
             telemetry.addData("goldPos",goldPos);

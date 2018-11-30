@@ -43,6 +43,7 @@ public class Hardware {
 
     public Servo teamMarker = null;
 
+    //gyro
     public BNO055IMU imu;
 
     /**
@@ -61,6 +62,7 @@ public class Hardware {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
+
         //scoring mechanism
         scoringSlide = hwMap.dcMotor.get("scoringSlide");
         scoringSlide.setDirection(DcMotor.Direction.REVERSE);
@@ -70,10 +72,12 @@ public class Hardware {
         blockingBar = hwMap.servo.get("blockingBar");
         bopper = hwMap.servo.get("bopper");
 
+
         //hanging mechanism
         hangingMotor = hwMap.dcMotor.get("hangingMotor");
         hangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         //drive train motor setup
         leftDriveFront = hwMap.dcMotor.get("leftDriveFront");
@@ -84,33 +88,20 @@ public class Hardware {
         rightDriveFront.setDirection(DcMotor.Direction.REVERSE);
         rightDriveRear.setDirection(DcMotor.Direction.REVERSE);
 
+
         //collection mechanism
         collectionSlide = hwMap.dcMotor.get("collectionSlide");
-        wrist = hwMap.dcMotor.get("wrist");
+        collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        wrist = hwMap.dcMotor.get("wrist");
         wrist.setDirection(DcMotor.Direction.REVERSE);
         wrist.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         intake = hwMap.crservo.get("intake");
 
 
         teamMarker = hwMap.servo.get("teamMarker");
-
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        this.imu = hwMap.get(BNO055IMU.class, "imu");
-        this.imu.initialize(parameters);
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
     }
 }
