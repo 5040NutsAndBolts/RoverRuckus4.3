@@ -24,7 +24,7 @@ public class LiftMechanism {
             liftToggle = true;
 
             if(robot.hangingMotor.getCurrentPosition() < 40) {
-                robot.hangingMotor.setTargetPosition(6900);
+                robot.hangingMotor.setTargetPosition(7200);
             }
             else {
                 robot.hangingMotor.setTargetPosition(20);

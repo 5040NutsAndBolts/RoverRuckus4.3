@@ -91,6 +91,7 @@ public class Hardware {
 
         //collection mechanism
         collectionSlide = hwMap.dcMotor.get("collectionSlide");
+        collectionSlide.setDirection(DcMotor.Direction.REVERSE);
         collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 

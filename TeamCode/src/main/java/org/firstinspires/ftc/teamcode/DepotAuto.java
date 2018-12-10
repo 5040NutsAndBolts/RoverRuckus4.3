@@ -65,22 +65,23 @@ public class DepotAuto extends AutoMethods {
             runToSidewaysWait(-15, robot, driveTrain);
             //moves into the depot
             runToForwardWait(-30, robot, driveTrain);
+            runToSidewaysWait(-5,robot,driveTrain);
         }
         //GOLD IN THE MIDDLE
         else if(goldPos == 2) {
             //rotates to face gold
-            runToRotateWait(-10,robot,driveTrain);
+            runToRotateWait(-15,robot,driveTrain);
             //knocks off gold
             runToSidewaysWait(40,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(-130,robot,driveTrain);
+            runToRotateWait(-125,robot,driveTrain);
             //runs into wall
             runToSidewaysWait(-15,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
-            runToRotateWait(-52,robot,driveTrain);
+            runToRotateWait(-55,robot,driveTrain);
             //knocks off gold
             runToSidewaysWait(30,robot,driveTrain);
             //rotates to be level with wall
@@ -96,6 +97,6 @@ public class DepotAuto extends AutoMethods {
         robot.hangingMotor.setPower(0);
 
         //drives into the other teams crater
-        runToForwardWait(70,robot,driveTrain);
+        runToForwardWait(75,robot,driveTrain);
     }
 }

@@ -118,12 +118,6 @@ public class Teleop extends OpMode {
             leftStickY1 /= 2;
         }
 
-        if(robot.scoringSlide.getCurrentPosition() > 200) {
-            rightStickX1 /= 2;
-            leftStickX1 /= 2;
-            leftStickY1 /= 2;
-        }
-
         if(rightStickX1 == 0) {
             if(dPadLeft1) {
                 rightStickX1 = -0.3;

@@ -25,7 +25,7 @@ public class Collection {
     public void wrist(boolean toggle) {
 
         //set the wrist up when slide is in
-        if(robot.collectionSlide.getCurrentPosition()<10) {
+        if(robot.collectionSlide.getCurrentPosition()<50) {
             robot.wrist.setTargetPosition(0);
 
             //throws wrist up so it puts minerals into scoring bucket
@@ -39,7 +39,7 @@ public class Collection {
         //sets wrist part way up
         else if(!wristDown) {
             robot.wrist.setPower(0.5);
-            robot.wrist.setTargetPosition(370);
+            robot.wrist.setTargetPosition(300);
         }
         //sets wrist all the way down
         else {
@@ -47,7 +47,7 @@ public class Collection {
             robot.wrist.setPower(0.3);
         }
         //toggle for the wrist when toggle is true
-        if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>10) {
+        if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>50) {
             wristToggle = true;
 
             if(robot.wrist.getCurrentPosition() > 400) {
@@ -87,10 +87,10 @@ public class Collection {
     public  void slide(boolean in, boolean out) {
         if(out) {
             robot.collectionSlide.setPower(1);
-            robot.collectionSlide.setTargetPosition(1880);
+            robot.collectionSlide.setTargetPosition(1210);
         }
         else if(in) {
-            robot.collectionSlide.setPower(0.5);
+            robot.collectionSlide.setPower(1);
             if(robot.collectionSlide.getCurrentPosition() > 10) {
                 robot.collectionSlide.setTargetPosition(-100);
             }
@@ -99,7 +99,7 @@ public class Collection {
             }
         }
         else {
-            robot.collectionSlide.setPower(0.6);
+            robot.collectionSlide.setPower(0);
             robot.collectionSlide.setTargetPosition(robot.collectionSlide.getCurrentPosition());
         }
     }

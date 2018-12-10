@@ -3,13 +3,15 @@ package org.firstinspires.ftc.teamcode;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Auto for the depot landing spot
  */
-@Autonomous(name="Crater", group="Auto")
-public class CraterAuto extends AutoMethods {
+@Autonomous(name="Depot Custom", group="Auto")
+//@Disabled
+public class DepotAutoCustom extends AutoMethods {
 
     //class objects
     private Hardware robot;
@@ -56,45 +58,37 @@ public class CraterAuto extends AutoMethods {
         //GOLD ON THE LEFT
         if(goldPos == 1) {
             //rotates to face gold
-            runToRotateWait(25, robot, driveTrain);
+            runToRotateWait(22, robot, driveTrain);
             //knocks off gold
-            runToSidewaysWait(20, robot, driveTrain);
+            runToSidewaysWait(25, robot, driveTrain);
             //rotates to be level with wall
-            runToRotateWait(20, robot, driveTrain);
+            runToRotateWait(300, robot, driveTrain);
             //runs into wall
-            runToForwardWait(-5,robot,driveTrain);
-            runToSidewaysWait(20, robot, driveTrain);
+            runToSidewaysWait(40, robot, driveTrain);
         }
         //GOLD IN THE MIDDLE
         else if(goldPos == 2) {
             //rotates to face gold
-            runToRotateWait(-20,robot,driveTrain);
+            runToRotateWait(-15,robot,driveTrain);
             //knocks off gold
-            runToSidewaysWait(17,robot,driveTrain);
-            runToSidewaysWait(-5,robot,driveTrain);
+            runToSidewaysWait(40,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(60,robot,driveTrain);
+            runToRotateWait(335,robot,driveTrain);
             //runs into wall
-            runToForwardWait(-13,robot,driveTrain);
-            runToSidewaysWait(37,robot,driveTrain);
+            runToSidewaysWait(15,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
-            runToRotateWait(-55,robot,driveTrain);
+            runToRotateWait(-50,robot,driveTrain);
             //knocks off gold
-            runToSidewaysWait(25,robot,driveTrain);
-            //rotates to be level with wall
-            runToRotateWait(50,robot,driveTrain);
-            //runs into wall
-            runToSidewaysWait(-4,robot,driveTrain);
-            runToForwardWait(-30,robot,driveTrain);
-            runToRotateWait(50,robot,driveTrain);
             runToSidewaysWait(30,robot,driveTrain);
+            //rotates to be level with wall
+            runToForwardWait(10,robot,driveTrain);
+            runToSidewaysWait(15,robot,driveTrain);
+            //runs into wall
+            runToForwardWait(-40,robot,driveTrain);
         }
-
-        //moves into the depot
-        runToForwardWait(-65, robot, driveTrain);
 
         //places the team marker in the depot
         robot.teamMarker.setPosition(.27);
@@ -102,9 +96,8 @@ public class CraterAuto extends AutoMethods {
         //powers of the hanging motor to conserve power and not break the motor
         robot.hangingMotor.setPower(0);
 
-        runToSidewaysWait(3,robot,driveTrain);
-        //parks in crater
-        runToForwardWait(80,robot,driveTrain);
+        //drives into the other teams crater
+        runToForwardWait(70,robot,driveTrain);
 
     }
 }

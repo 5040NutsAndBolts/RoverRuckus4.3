@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Auto for the depot landing spot
  */
 @Autonomous(name="Depot Double Sample", group="Auto")
-@Disabled
+//@Disabled
 public class DepotAutoDoubleSample extends AutoMethods {
 
     //class objects
@@ -58,35 +58,36 @@ public class DepotAutoDoubleSample extends AutoMethods {
         //GOLD ON THE LEFT
         if(goldPos == 1) {
             //rotates to face gold
-            runToRotateWait(25, robot, driveTrain);
+            runToRotateWait(22, robot, driveTrain);
             //knocks off gold
             runToSidewaysWait(25, robot, driveTrain);
             //rotates to be level with wall
-            runToRotateWait(290, robot, driveTrain);
+            runToRotateWait(300, robot, driveTrain);
             //runs into wall
-            runToSidewaysWait(35, robot, driveTrain);
+            runToSidewaysWait(40, robot, driveTrain);
         }
         //GOLD IN THE MIDDLE
         else if(goldPos == 2) {
             //rotates to face gold
-            runToRotateWait(-10,robot,driveTrain);
+            runToRotateWait(-15,robot,driveTrain);
             //knocks off gold
             runToSidewaysWait(40,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(325,robot,driveTrain);
+            runToRotateWait(335,robot,driveTrain);
             //runs into wall
-            runToSidewaysWait(10,robot,driveTrain);
+            runToSidewaysWait(15,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
-            runToRotateWait(-52,robot,driveTrain);
+            runToRotateWait(-50,robot,driveTrain);
             //knocks off gold
             runToSidewaysWait(30,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(-90,robot,driveTrain);
+            runToForwardWait(10,robot,driveTrain);
+            runToSidewaysWait(15,robot,driveTrain);
             //runs into wall
-            runToSidewaysWait(-40,robot,driveTrain);
+            runToForwardWait(-40,robot,driveTrain);
         }
 
         //places the team marker in the depot
@@ -96,6 +97,27 @@ public class DepotAutoDoubleSample extends AutoMethods {
         robot.hangingMotor.setPower(0);
 
         //drives into the other teams crater
-        //runToForwardWait(70,robot,driveTrain);
+        runToForwardWait(50,robot,driveTrain);
+        runToSidewaysWait(-5,robot,driveTrain);
+        runToRotateWait(-50,robot,driveTrain);
+        if(goldPos == 1) {
+            runToForwardWait(20,robot,driveTrain);
+            runToSidewaysWait(10,robot,driveTrain);
+            runToRotateWait(90,robot,driveTrain);
+            runToForwardWait(10,robot,driveTrain);
+        }else if(goldPos == 2) {
+            runToForwardWait(40,robot,driveTrain);
+            runToSidewaysWait(10,robot,driveTrain);
+            runToSidewaysWait(-10,robot,driveTrain);
+            runToForwardWait(-40,robot,driveTrain);
+            runToRotateWait(50,robot,driveTrain);
+            runToSidewaysWait(5,robot,driveTrain);
+            runToForwardWait(20,robot,driveTrain);
+        }else {
+            runToForwardWait(60,robot,driveTrain);
+            runToSidewaysWait(10,robot,driveTrain);
+            runToRotateWait(90,robot,driveTrain);
+            runToForwardWait(10,robot,driveTrain);
+        }
     }
 }
