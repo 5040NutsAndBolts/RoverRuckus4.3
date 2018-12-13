@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Auto for the depot landing spot
  */
-@Autonomous(name="Depot Custom", group="Auto")
-//@Disabled
-public class DepotAutoCustom extends AutoMethods {
+@Autonomous(name="Crater Double Sample", group="Auto")
+public class CraterAutoDoubleSample extends AutoMethods {
 
     //class objects
     private Hardware robot;
@@ -58,36 +55,68 @@ public class DepotAutoCustom extends AutoMethods {
         //GOLD ON THE LEFT
         if(goldPos == 1) {
             //rotates to face gold
-            runToRotateWait(22, robot, driveTrain);
+            runToRotateWait(120, robot, driveTrain);
             //knocks off gold
-            runToSidewaysWait(25, robot, driveTrain);
+            runToForwardWait(20, robot, driveTrain);
             //rotates to be level with wall
-            runToRotateWait(300, robot, driveTrain);
+            runToRotateWait(-80, robot, driveTrain);
             //runs into wall
-            runToSidewaysWait(40, robot, driveTrain);
+            runToForwardWait(-15,robot,driveTrain);
+            runToSidewaysWait(25, robot, driveTrain);
         }
         //GOLD IN THE MIDDLE
         else if(goldPos == 2) {
             //rotates to face gold
-            runToRotateWait(-15,robot,driveTrain);
+            runToRotateWait(75,robot,driveTrain);
             //knocks off gold
-            runToSidewaysWait(40,robot,driveTrain);
+            runToForwardWait(20,robot,driveTrain);
+            runToForwardWait(-10,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(335,robot,driveTrain);
+            runToRotateWait(-80,robot,driveTrain);
             //runs into wall
+            runToForwardWait(-33,robot,driveTrain);
+            runToRotateWait(45,robot,driveTrain);
             runToSidewaysWait(15,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
-            runToRotateWait(-50,robot,driveTrain);
+            runToRotateWait(35,robot,driveTrain);
             //knocks off gold
-            runToSidewaysWait(30,robot,driveTrain);
+            runToForwardWait(30,robot,driveTrain);
             //rotates to be level with wall
-            runToForwardWait(10,robot,driveTrain);
-            runToSidewaysWait(15,robot,driveTrain);
+            runToRotateWait(-40,robot,driveTrain);
             //runs into wall
+            runToSidewaysWait(-10,robot,driveTrain);
+            runToForwardWait(-55,robot,driveTrain);
+            runToRotateWait(45,robot,driveTrain);
+            runToSidewaysWait(15,robot,driveTrain);
+        }
+
+        if(goldPos==1) {
+            runToForwardWait(-55,robot,driveTrain);
+            runToSidewaysWait(-5,robot,driveTrain);
+            runToRotateWait(-90,robot,driveTrain);
+            runToForwardWait(30,robot,driveTrain);
+            runToForwardWait(-30,robot,driveTrain);
+            runToRotateWait(90,robot,driveTrain);
+            runToSidewaysWait(5,robot,driveTrain);
+        }
+        else if(goldPos==2) {
             runToForwardWait(-40,robot,driveTrain);
+            runToSidewaysWait(-5,robot,driveTrain);
+            runToRotateWait(-90,robot,driveTrain);
+            runToForwardWait(15,robot,driveTrain);
+            runToForwardWait(-15,robot,driveTrain);
+            runToRotateWait(90,robot,driveTrain);
+            runToSidewaysWait(10,robot,driveTrain);
+            runToForwardWait(-10,robot,driveTrain);
+        }
+        else {
+            runToForwardWait(-25,robot,driveTrain);
+            runToSidewaysWait(-10,robot,driveTrain);
+            runToSidewaysWait(10,robot,driveTrain);
+            runToForwardWait(-20,robot,driveTrain);
         }
 
         //places the team marker in the depot
@@ -96,8 +125,9 @@ public class DepotAutoCustom extends AutoMethods {
         //powers of the hanging motor to conserve power and not break the motor
         robot.hangingMotor.setPower(0);
 
-        //drives into the other teams crater
-        runToForwardWait(70,robot,driveTrain);
+        runToSidewaysWait(3,robot,driveTrain);
+        //parks in crater
+        runToForwardWait(75,robot,driveTrain);
 
     }
 }

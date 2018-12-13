@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Auto for the depot landing spot
  */
-@Autonomous(name="Depot", group="Auto")
+@Autonomous(name="Depot Opp Crater", group="Auto")
 public class DepotAuto extends AutoMethods {
 
     //class objects
@@ -50,45 +50,48 @@ public class DepotAuto extends AutoMethods {
         detector.enable();
 
         //lands the robot and returns what position the gold mineral is in
-       int goldPos = landing(robot,detector, driveTrain);
+        int goldPos = landing(robot,detector, driveTrain);
 
 
         //GOLD ON THE LEFT
         if(goldPos == 1) {
             //rotates to face gold
-            runToRotateWait(25, robot, driveTrain);
+            runToRotateWait(-60, robot, driveTrain);
             //knocks off gold
-            runToSidewaysWait(25, robot, driveTrain);
+            runToForwardWait(-35, robot, driveTrain);
             //rotates to be level with wall
-            runToRotateWait(-165, robot, driveTrain);
+            runToRotateWait(-80, robot, driveTrain);
             //runs into wall
-            runToSidewaysWait(-15, robot, driveTrain);
-            //moves into the depot
-            runToForwardWait(-30, robot, driveTrain);
+            runToSidewaysWait(-10,robot,driveTrain);
+            runToForwardWait(-30,robot,driveTrain);
             runToSidewaysWait(-5,robot,driveTrain);
         }
         //GOLD IN THE MIDDLE
         else if(goldPos == 2) {
             //rotates to face gold
-            runToRotateWait(-15,robot,driveTrain);
+            runToRotateWait(-100,robot,driveTrain);
             //knocks off gold
-            runToSidewaysWait(40,robot,driveTrain);
+            runToForwardWait(-50,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(-125,robot,driveTrain);
+            runToRotateWait(-40,robot,driveTrain);
             //runs into wall
             runToSidewaysWait(-15,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
-            runToRotateWait(-55,robot,driveTrain);
+            runToRotateWait(35,robot,driveTrain);
             //knocks off gold
-            runToSidewaysWait(30,robot,driveTrain);
+            runToForwardWait(35,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(-90,robot,driveTrain);
+            runToRotateWait(-83,robot,driveTrain);
             //runs into wall
-            runToSidewaysWait(-40,robot,driveTrain);
+            runToForwardWait(-35,robot,driveTrain);
+            runToRotateWait(-90,robot,driveTrain);
+            runToSidewaysWait(-15,robot,driveTrain);
         }
+
+        //moves into the depot
 
         //places the team marker in the depot
         robot.teamMarker.setPosition(.27);
@@ -96,7 +99,8 @@ public class DepotAuto extends AutoMethods {
         //powers of the hanging motor to conserve power and not break the motor
         robot.hangingMotor.setPower(0);
 
-        //drives into the other teams crater
+        //parks in crater
         runToForwardWait(75,robot,driveTrain);
+
     }
 }

@@ -56,45 +56,46 @@ public class CraterAuto extends AutoMethods {
         //GOLD ON THE LEFT
         if(goldPos == 1) {
             //rotates to face gold
-            runToRotateWait(25, robot, driveTrain);
+            runToRotateWait(120, robot, driveTrain);
             //knocks off gold
-            runToSidewaysWait(20, robot, driveTrain);
+            runToForwardWait(20, robot, driveTrain);
             //rotates to be level with wall
-            runToRotateWait(20, robot, driveTrain);
+            runToRotateWait(-80, robot, driveTrain);
             //runs into wall
-            runToForwardWait(-5,robot,driveTrain);
+            runToForwardWait(-15,robot,driveTrain);
             runToSidewaysWait(20, robot, driveTrain);
         }
         //GOLD IN THE MIDDLE
         else if(goldPos == 2) {
             //rotates to face gold
-            runToRotateWait(-20,robot,driveTrain);
+            runToRotateWait(75,robot,driveTrain);
             //knocks off gold
-            runToSidewaysWait(17,robot,driveTrain);
-            runToSidewaysWait(-5,robot,driveTrain);
+            runToForwardWait(20,robot,driveTrain);
+            runToForwardWait(-10,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(60,robot,driveTrain);
+            runToRotateWait(-80,robot,driveTrain);
             //runs into wall
-            runToForwardWait(-13,robot,driveTrain);
-            runToSidewaysWait(37,robot,driveTrain);
+            runToForwardWait(-35,robot,driveTrain);
+            runToRotateWait(45,robot,driveTrain);
+            runToSidewaysWait(10,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
-            runToRotateWait(-55,robot,driveTrain);
+            runToRotateWait(35,robot,driveTrain);
             //knocks off gold
-            runToSidewaysWait(25,robot,driveTrain);
+            runToForwardWait(30,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(50,robot,driveTrain);
+            runToRotateWait(-40,robot,driveTrain);
             //runs into wall
-            runToSidewaysWait(-4,robot,driveTrain);
-            runToForwardWait(-30,robot,driveTrain);
-            runToRotateWait(50,robot,driveTrain);
-            runToSidewaysWait(30,robot,driveTrain);
+            runToSidewaysWait(-10,robot,driveTrain);
+            runToForwardWait(-55,robot,driveTrain);
+            runToRotateWait(45,robot,driveTrain);
+            runToSidewaysWait(15,robot,driveTrain);
         }
 
         //moves into the depot
-        runToForwardWait(-65, robot, driveTrain);
+        runToForwardWait(-50, robot, driveTrain);
 
         //places the team marker in the depot
         robot.teamMarker.setPosition(.27);

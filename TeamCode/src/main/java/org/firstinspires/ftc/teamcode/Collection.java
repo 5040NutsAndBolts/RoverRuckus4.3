@@ -87,7 +87,7 @@ public class Collection {
     public  void slide(boolean in, boolean out) {
         if(out) {
             robot.collectionSlide.setPower(1);
-            robot.collectionSlide.setTargetPosition(1210);
+            robot.collectionSlide.setTargetPosition(1250);
         }
         else if(in) {
             robot.collectionSlide.setPower(1);
