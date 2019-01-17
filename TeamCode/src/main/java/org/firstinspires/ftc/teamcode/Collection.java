@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 /**
  * Class for the collection Mechanism code
  */
@@ -7,6 +9,7 @@ public class Collection {
 
     private Hardware robot;
 
+    private boolean wristReset = false;
     private boolean wristToggle = false;   //toggle for the wrist
     private boolean wristDown = true;      //when true and slide is out the wrist will be down
 
@@ -26,31 +29,39 @@ public class Collection {
 
         //set the wrist up when slide is in
         if(robot.collectionSlide.getCurrentPosition()<50) {
-            robot.wrist.setTargetPosition(0);
+            robot.wrist.setTargetPosition(10);
 
             //throws wrist up so it puts minerals into scoring bucket
-            if(robot.wrist.getCurrentPosition() >10)
+            if(robot.wrist.getCurrentPosition() >30) {
                 robot.wrist.setPower(1);
-            else
+            }else {
+                if (wristReset == true) {
+                    robot.wrist.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    wristReset = false;
+                }
                 robot.wrist.setPower(0.3);
+            }
             //will set the wrist all the way down when the slide is extended out
             wristDown = true;
         }
         //sets wrist part way up
         else if(!wristDown) {
             robot.wrist.setPower(0.5);
-            robot.wrist.setTargetPosition(300);
+            robot.wrist.setTargetPosition(450);
+            wristReset = true;
         }
         //sets wrist all the way down
         else {
-            robot.wrist.setTargetPosition(670);
+            robot.wrist.setTargetPosition(680);
             robot.wrist.setPower(0.3);
+            wristReset = true;
         }
         //toggle for the wrist when toggle is true
         if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>50) {
             wristToggle = true;
 
-            if(robot.wrist.getCurrentPosition() > 400) {
+            if(robot.wrist.getCurrentPosition() > 500) {
                 wristDown = false;
             }
             else {
@@ -87,15 +98,15 @@ public class Collection {
     public  void slide(boolean in, boolean out) {
         if(out) {
             robot.collectionSlide.setPower(1);
-            robot.collectionSlide.setTargetPosition(1250);
+            robot.collectionSlide.setTargetPosition(1220);
         }
         else if(in) {
             robot.collectionSlide.setPower(1);
             if(robot.collectionSlide.getCurrentPosition() > 10) {
-                robot.collectionSlide.setTargetPosition(-100);
+                robot.collectionSlide.setTargetPosition(-200);
             }
             else {
-                robot.collectionSlide.setTargetPosition(0);
+                robot.collectionSlide.setTargetPosition(-50);
             }
         }
         else {
