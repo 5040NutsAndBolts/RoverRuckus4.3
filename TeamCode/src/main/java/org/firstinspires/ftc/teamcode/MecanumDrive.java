@@ -7,6 +7,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.io.IOException;
+
 import static java.lang.Math.abs;
 
 /**
@@ -18,12 +20,10 @@ public class MecanumDrive {
     double adjust = 0;
 
     /**
-     * sets up the hardware refernce so you don't have to pass it as a parameter
+     * sets up the hardware refernce so you don't have to pass it as a parameter and sets the adjust
      * @param r - r is the hardware reference from the code
      */
-    MecanumDrive(Hardware r) {
-        robot = r;
-    }
+    MecanumDrive(Hardware r) { robot = r; }
 
     /**
      * this method is for driving the mecanum with the three inputs

@@ -12,9 +12,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
- *This class is for setting up all the hardware components of the robot.
- *This will have all the sensors, motors and servos declarations.
- *It will also be used to initialize everything for autonomous
+ * This class is for setting up all the hardware components of the robot.
+ * This will have all the sensors, motors and servos declarations.
+ * It will also be used to initialize everything for autonomous
  */
 public class Hardware {
 
@@ -46,6 +46,9 @@ public class Hardware {
     //gyro
     public BNO055IMU imu;
 
+    //export data
+    public FileHelper exportData = null;
+
     /**
      * Constructor to set up the Hardwaremap
      */
@@ -54,8 +57,8 @@ public class Hardware {
     }
 
     /**
-     *Method for initializing all the hardware components.
-     *Use at the beginning of code initialization
+     * Method for initializing all the hardware components.
+     * Use at the beginning of code initialization
      * @param ahwMap the hardware declaration being passed into this class
      */
     public void init(HardwareMap ahwMap) {

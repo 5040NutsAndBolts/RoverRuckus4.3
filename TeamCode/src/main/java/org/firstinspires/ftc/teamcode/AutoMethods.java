@@ -11,8 +11,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
+import java.io.IOException;
 
 /**
  * Class for auto methods. The methods in here have loops that are used in auto and need the parameter of opModeIsActive().
@@ -188,5 +194,34 @@ class AutoMethods extends LinearOpMode {
         //moves away from hook
         runToSidewaysWait(7,robot,driveTrain);
         return goldPos;
+    }
+
+    /**
+     *  This method creates the file that the gyro angle is written to and writes that
+     *  @param robot - object used to get the gyro readings and where the file is stored
+     *  @param driverSpot - determines the position of the driver and how much to add to the gyro adjust
+     */
+    public void writeToFile(Hardware robot, String driverSpot){
+        //makes a new (or clears the) text file
+        try {
+            robot.exportData = new FileHelper();
+            robot.exportData.clearFile();
+        } catch (IOException e) {
+            telemetry.addLine("IOException: \n"+e);
+            telemetry.update();
+        }
+        //write to the text file
+        try {
+            //writes firstAngle from gyro orientation (look in MecanumDrive class for other examples)
+            Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+            double firstAngle = angles.firstAngle;
+            firstAngle += Math.PI/4;
+            if(driverSpot.equals("Depot"))
+                firstAngle += Math.PI/2;
+            robot.exportData.writeToFile(""+firstAngle);
+        } catch (IOException e) {
+            telemetry.addLine("IOException in file writing: \n"+e);
+            telemetry.update();
+        }
     }
 }

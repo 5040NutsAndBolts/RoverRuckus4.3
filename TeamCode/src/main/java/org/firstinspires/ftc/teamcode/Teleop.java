@@ -11,6 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
+import java.io.IOException;
+
 
 @TeleOp(name="Teleop", group="Teleop")
 
@@ -22,6 +24,8 @@ public class Teleop extends OpMode {
     private MecanumDrive driveTrain;
     private LiftMechanism lifter;
     private Collection collection;
+
+    private boolean changeAdjust = false;
 
     /**
      * sets up the objects for the other classes
@@ -61,6 +65,13 @@ public class Teleop extends OpMode {
     @Override
     public void init_loop() {
         telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
+        if (gamepad1.x){
+            if (changeAdjust)
+                changeAdjust = false;
+            else
+                changeAdjust = true;
+        }
+        telemetry.addData("change adjust value", changeAdjust);
         telemetry.update();
     }
 
@@ -71,6 +82,16 @@ public class Teleop extends OpMode {
     @Override
     public void start() {
         robot.teamMarker.setPosition(0.27);
+        if (changeAdjust){
+            // creates a new reference for the file and parses the line to a double
+            //      Will fix later if the exportData will always be a double
+            try {
+                robot.exportData = new FileHelper();
+            } catch (IOException e) { }
+            try {
+                driveTrain.adjust = Double.parseDouble(robot.exportData.readFromFile());
+            } catch (IOException e) { }
+        }
     }
 
     /**

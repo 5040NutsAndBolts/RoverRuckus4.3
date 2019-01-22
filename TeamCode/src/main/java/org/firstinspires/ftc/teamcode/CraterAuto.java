@@ -2,8 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
  * Auto for the depot landing spot
@@ -15,6 +19,7 @@ public class CraterAuto extends AutoMethods {
     private Hardware robot;
     private MecanumDrive driveTrain;
     private GoldAlignDetector detector;
+    private String driverSpot = "Crater";
 
     /**
      * The method that gets run when you hit init
@@ -27,6 +32,19 @@ public class CraterAuto extends AutoMethods {
 
         //initializes the robot hardware and sets powers so things don't move
         robot.init(hardwareMap);
+
+        //gyro setup
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
+        robot.imu.initialize(parameters);
+        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
         robot.wrist.setPower(0.5);
         robot.wrist.setTargetPosition(0);
         robot.collectionSlide.setPower(0.3);
@@ -44,6 +62,13 @@ public class CraterAuto extends AutoMethods {
         //waits here til you hit start or stop
         while(!isStarted()) {
             telemetry.addLine("ready");
+            if(gamepad1.x){
+                if(driverSpot.equals("Crater"))
+                    driverSpot = "Depot";
+                else
+                    driverSpot = "Crater";
+            }
+            telemetry.addData("Driver spot",driverSpot);
             telemetry.update();
         }
         //enables the detector until it scans the minerals
@@ -107,5 +132,7 @@ public class CraterAuto extends AutoMethods {
         //parks in crater
         runToForwardWait(80,robot,driveTrain);
 
+        // Writes gyro angle to the data file
+        writeToFile(robot, driverSpot);
     }
 }
