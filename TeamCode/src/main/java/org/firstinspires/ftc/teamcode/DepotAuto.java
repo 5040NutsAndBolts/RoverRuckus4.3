@@ -19,7 +19,7 @@ public class DepotAuto extends AutoMethods {
     private Hardware robot;
     private MecanumDrive driveTrain;
     private GoldAlignDetector detector;
-    private String driverSpot = "Crater";
+    private String driverSpot = "Depot";
 
     /**
      * The method that gets run when you hit init
@@ -59,15 +59,20 @@ public class DepotAuto extends AutoMethods {
         detector.useDefaults();
         dogeCVSetup(detector);
 
+        boolean spotToggle = false;
         //waits here til you hit start or stop
         while(!isStarted()) {
-            telemetry.addLine("ready");
-            if(gamepad1.x){
+            if(gamepad1.x && !spotToggle){
+                spotToggle = true;
                 if(driverSpot.equals("Crater"))
                     driverSpot = "Depot";
                 else
                     driverSpot = "Crater";
             }
+            else if(!gamepad1.x && spotToggle)
+                spotToggle = false;
+
+            telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
             telemetry.addData("Driver spot",driverSpot);
             telemetry.update();
         }

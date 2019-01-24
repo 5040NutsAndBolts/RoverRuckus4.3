@@ -59,15 +59,20 @@ public class CraterAutoDoubleSample extends AutoMethods {
         detector.useDefaults();
         dogeCVSetup(detector);
 
+        boolean spotToggle = false;
         //waits here til you hit start or stop
         while(!isStarted()) {
-            telemetry.addLine("ready");
-            if(gamepad1.x){
+            if(gamepad1.x && !spotToggle){
+                spotToggle = true;
                 if(driverSpot.equals("Crater"))
                     driverSpot = "Depot";
                 else
                     driverSpot = "Crater";
             }
+            else if(!gamepad1.x && spotToggle)
+                spotToggle = false;
+
+            telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
             telemetry.addData("Driver spot",driverSpot);
             telemetry.update();
         }
@@ -89,6 +94,18 @@ public class CraterAutoDoubleSample extends AutoMethods {
             //runs into wall
             runToForwardWait(-15,robot,driveTrain);
             runToSidewaysWait(25, robot, driveTrain);
+
+            //drives to be level with other sample
+            runToForwardWait(-55,robot,driveTrain);
+            //rotates to face other sample
+            runToSidewaysWait(-5,robot,driveTrain);
+            runToRotateWait(-90,robot,driveTrain);
+            //hits other sample and returns to the wall
+            runToForwardWait(30,robot,driveTrain);
+            runToForwardWait(-30,robot,driveTrain);
+            //rotates back to be level with the wall and runs into it
+            runToRotateWait(90,robot,driveTrain);
+            runToSidewaysWait(5,robot,driveTrain);
         }
         //GOLD IN THE MIDDLE
         else if(goldPos == 2) {
@@ -103,6 +120,20 @@ public class CraterAutoDoubleSample extends AutoMethods {
             runToForwardWait(-33,robot,driveTrain);
             runToRotateWait(45,robot,driveTrain);
             runToSidewaysWait(15,robot,driveTrain);
+
+            //drives to be level with other sample
+            runToForwardWait(-40,robot,driveTrain);
+            //rotates to face other sample
+            runToSidewaysWait(-5,robot,driveTrain);
+            runToRotateWait(-90,robot,driveTrain);
+            //hits other sample and returns to the wall
+            runToForwardWait(15,robot,driveTrain);
+            runToForwardWait(-15,robot,driveTrain);
+            //rotates back to be level with the wall and runs into it
+            runToRotateWait(90,robot,driveTrain);
+            runToSidewaysWait(10,robot,driveTrain);
+            //drives into the depot
+            runToForwardWait(-10,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
@@ -117,40 +148,23 @@ public class CraterAutoDoubleSample extends AutoMethods {
             runToForwardWait(-55,robot,driveTrain);
             runToRotateWait(45,robot,driveTrain);
             runToSidewaysWait(15,robot,driveTrain);
-        }
 
-        if(goldPos==1) {
-            runToForwardWait(-55,robot,driveTrain);
-            runToSidewaysWait(-5,robot,driveTrain);
-            runToRotateWait(-90,robot,driveTrain);
-            runToForwardWait(30,robot,driveTrain);
-            runToForwardWait(-30,robot,driveTrain);
-            runToRotateWait(90,robot,driveTrain);
-            runToSidewaysWait(5,robot,driveTrain);
-        }
-        else if(goldPos==2) {
-            runToForwardWait(-40,robot,driveTrain);
-            runToSidewaysWait(-5,robot,driveTrain);
-            runToRotateWait(-90,robot,driveTrain);
-            runToForwardWait(15,robot,driveTrain);
-            runToForwardWait(-15,robot,driveTrain);
-            runToRotateWait(90,robot,driveTrain);
-            runToSidewaysWait(10,robot,driveTrain);
-            runToForwardWait(-10,robot,driveTrain);
-        }
-        else {
+            //drives to be level with other sample
             runToForwardWait(-25,robot,driveTrain);
+            //drives sideways to hit the sample and returns to the wall
             runToSidewaysWait(-10,robot,driveTrain);
             runToSidewaysWait(10,robot,driveTrain);
+            //drives into the depot
             runToForwardWait(-20,robot,driveTrain);
         }
 
         //places the team marker in the depot
         robot.teamMarker.setPosition(.27);
 
-        //powers of the hanging motor to conserve power and not break the motor
+        //turns off the power of the hanging motor to stop the power draw
         robot.hangingMotor.setPower(0);
 
+        //makes sure the robot is on the wall
         runToSidewaysWait(3,robot,driveTrain);
 
         //parks in crater

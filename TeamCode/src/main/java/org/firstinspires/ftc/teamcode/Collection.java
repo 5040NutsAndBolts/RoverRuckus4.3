@@ -32,7 +32,7 @@ public class Collection {
             robot.wrist.setTargetPosition(10);
 
             //throws wrist up so it puts minerals into scoring bucket
-            if(robot.wrist.getCurrentPosition() >30) {
+            if(robot.wrist.getCurrentPosition() >50) {
                 robot.wrist.setPower(1);
             }else {
                 if (wristReset == true) {
@@ -47,14 +47,17 @@ public class Collection {
         }
         //sets wrist part way up
         else if(!wristDown) {
-            robot.wrist.setPower(0.5);
-            robot.wrist.setTargetPosition(450);
+            robot.wrist.setPower(0.3);
+            robot.wrist.setTargetPosition(400);
             wristReset = true;
         }
         //sets wrist all the way down
         else {
             robot.wrist.setTargetPosition(680);
-            robot.wrist.setPower(0.3);
+            if(robot.wrist.getCurrentPosition() < robot.wrist.getTargetPosition()-100)
+                robot.wrist.setPower(0.7);
+            else
+                robot.wrist.setPower(0.3);
             wristReset = true;
         }
         //toggle for the wrist when toggle is true
@@ -103,7 +106,7 @@ public class Collection {
         else if(in) {
             robot.collectionSlide.setPower(1);
             if(robot.collectionSlide.getCurrentPosition() > 10) {
-                robot.collectionSlide.setTargetPosition(-200);
+                robot.collectionSlide.setTargetPosition(-1000);
             }
             else {
                 robot.collectionSlide.setTargetPosition(-50);

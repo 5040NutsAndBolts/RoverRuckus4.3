@@ -80,6 +80,7 @@ public class Hardware {
         hangingMotor = hwMap.dcMotor.get("hangingMotor");
         hangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hangingMotor.setTargetPosition(20);
 
 
         //drive train motor setup

@@ -12,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 /**
  * Auto for the depot landing spot
  */
-@Autonomous(name="Depot Our Crater", group="Auto")
-public class DepotAutoOurPark extends AutoMethods {
+@Autonomous(name="Depot No Sample Opp Crater", group="Auto")
+public class DepotNoSample extends AutoMethods {
 
     //class objects
     private Hardware robot;
@@ -82,51 +82,26 @@ public class DepotAutoOurPark extends AutoMethods {
         //lands the robot and returns what position the gold mineral is in
         int goldPos = landing(robot,detector, driveTrain);
 
+        runToSidewaysWait(10,robot,driveTrain);
 
-        //GOLD ON THE LEFT
-        if(goldPos == 1) {
-            //rotates to face gold
-            runToRotateWait(-60, robot, driveTrain);
-            //knocks off gold
-            runToForwardWait(-35, robot, driveTrain);
-            runToRotateWait(-80, robot, driveTrain);
-            runToForwardWait(-30,robot,driveTrain);
-            runToRotateWait(90,robot,driveTrain);
-            runToSidewaysWait(15,robot,driveTrain);
-        }
-        //GOLD IN THE MIDDLE
-        else if(goldPos == 2) {
-            //rotates to face gold
-            runToRotateWait(-100,robot,driveTrain);
-            //knocks off gold
-            runToForwardWait(-50,robot,driveTrain);
-            //rotates to be level with wall
-            runToRotateWait(50,robot,driveTrain);
-            //runs into wall
-            runToSidewaysWait(15,robot,driveTrain);
-        }
-        //GOLD ON THE RIGHT
-        else {
-            //rotates to face gold
-            runToRotateWait(35,robot,driveTrain);
-            //knocks off gold
-            runToForwardWait(40,robot,driveTrain);
-            //rotates to be level with wall
-            runToRotateWait(-85,robot,driveTrain);
-            runToForwardWait(-35,robot,driveTrain);
-            runToSidewaysWait(5,robot,driveTrain);
-        }
+        runToForwardWait(-30,robot,driveTrain);
 
-        //moves into the depot
+        runToRotateWait(-140,robot,driveTrain);
+
+        runToSidewaysWait(-20,robot,driveTrain);
+
+        runToForwardWait(-60,robot,driveTrain);
 
         //places the team marker in the depot
         robot.teamMarker.setPosition(.27);
+
+        runToSidewaysWait(-5,robot,driveTrain);
 
         //powers of the hanging motor to conserve power and not break the motor
         robot.hangingMotor.setPower(0);
 
         //parks in crater
-        runToForwardWait(80,robot,driveTrain);
+        runToForwardWait(75,robot,driveTrain);
 
         // Writes gyro angle to the data file
         writeToFile(robot, driverSpot);

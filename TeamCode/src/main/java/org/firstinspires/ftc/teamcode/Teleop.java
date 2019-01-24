@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -65,13 +66,6 @@ public class Teleop extends OpMode {
     @Override
     public void init_loop() {
         telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
-        if (gamepad1.x){
-            if (changeAdjust)
-                changeAdjust = false;
-            else
-                changeAdjust = true;
-        }
-        telemetry.addData("change adjust value", changeAdjust);
         telemetry.update();
     }
 
@@ -81,6 +75,7 @@ public class Teleop extends OpMode {
      */
     @Override
     public void start() {
+        changeAdjust = true;
         robot.teamMarker.setPosition(0.27);
         if (changeAdjust){
             // creates a new reference for the file and parses the line to a double
@@ -90,7 +85,11 @@ public class Teleop extends OpMode {
             } catch (IOException e) { }
             try {
                 driveTrain.adjust = Double.parseDouble(robot.exportData.readFromFile());
-            } catch (IOException e) { }
+                robot.exportData.clearFile();
+                //writeToFile(robot);
+            } catch (Exception e) {
+                driveTrain.adjust = 0;
+            }
         }
     }
 

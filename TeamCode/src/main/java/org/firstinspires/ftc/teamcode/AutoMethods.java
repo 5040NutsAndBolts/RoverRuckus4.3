@@ -192,7 +192,7 @@ class AutoMethods extends LinearOpMode {
         robot.hangingMotor.setTargetPosition(0);
 
         //moves away from hook
-        runToSidewaysWait(7,robot,driveTrain);
+        runToSidewaysWait(4,robot,driveTrain);
         return goldPos;
     }
 
