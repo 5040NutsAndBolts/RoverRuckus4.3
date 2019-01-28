@@ -108,7 +108,7 @@ public class DepotAutoOurPark extends AutoMethods {
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
-            runToRotateWait(35,robot,driveTrain);
+            runToRotateWait(40,robot,driveTrain);
             //knocks off gold
             runToForwardWait(40,robot,driveTrain);
             //rotates to be level with wall

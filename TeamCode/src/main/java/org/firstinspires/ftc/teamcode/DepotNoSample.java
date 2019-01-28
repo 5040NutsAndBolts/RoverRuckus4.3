@@ -5,7 +5,6 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -101,7 +100,13 @@ public class DepotNoSample extends AutoMethods {
         robot.hangingMotor.setPower(0);
 
         //parks in crater
-        runToForwardWait(75,robot,driveTrain);
+        runToForwardWait(85,robot,driveTrain);
+        /*runToForwardWait(55,robot,driveTrain);
+
+        runToSidewaysWait(10,robot,driveTrain);
+        runToRotateWait(180,robot,driveTrain);
+        runToSidewaysWait(15,robot,driveTrain);
+        runToForwardWait(-35,robot,driveTrain);*/
 
         // Writes gyro angle to the data file
         writeToFile(robot, driverSpot);

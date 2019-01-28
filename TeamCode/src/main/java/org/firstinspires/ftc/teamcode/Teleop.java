@@ -153,7 +153,7 @@ public class Teleop extends OpMode {
         telemetry.addLine("--------IMU--------");
         telemetry.addData("imu first angle", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
         telemetry.addData("imu heading", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
-        telemetry.addData("imu system calibrated", robot.imu.isSystemCalibrated());
+        telemetry.addData("adjust", driveTrain.adjust);
         telemetry.addData("imu calibrated?", robot.imu.isGyroCalibrated());
         telemetry.addLine("-------DRIVE MOTORS-------");
         telemetry.addData("front left drive", robot.leftDriveFront.getPower());
