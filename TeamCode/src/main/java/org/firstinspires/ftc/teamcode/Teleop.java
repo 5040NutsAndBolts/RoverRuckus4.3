@@ -165,8 +165,9 @@ public class Teleop extends OpMode {
         telemetry.addData("hanging motor set position", robot.hangingMotor.getTargetPosition());
         telemetry.addData("hanging motor power", robot.hangingMotor.getPower());
         telemetry.addLine("--------COLLECTION WRIST--------");
-        telemetry.addData("wrist Position", robot.wrist.getCurrentPosition());
-        telemetry.addData("wrist Power", robot.wrist.getPower());
+        telemetry.addData("Left Wrist Position", robot.wristLeft.getPosition());
+        telemetry.addData("Right Wrist Position", robot.wristRight.getPosition());
+        //telemetry.addData("wrist Power", robot.wrist.getPower());
         telemetry.addLine("--------COLLECTION SLIDE--------");
         telemetry.addData("collection slide Position", robot.collectionSlide.getCurrentPosition());
         telemetry.addData("collection slide power", robot.collectionSlide.getPower());

@@ -39,7 +39,8 @@ public class Hardware {
     //intake mechanism
     public CRServo intake = null;
     public DcMotor collectionSlide = null;
-    public Servo wrist = null;
+    public Servo wristLeft = null;
+    public Servo wristRight = null;
 
     public Servo teamMarker = null;
 
@@ -99,7 +100,11 @@ public class Hardware {
         collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        wrist = hwMap.servo.get("wrist");
+        wristLeft = hwMap.servo.get("wristRight");
+
+        wristRight = hwMap.servo.get("wristRight");
+
+        wristLeft.setDirection(Servo.Direction.REVERSE);
 
         intake = hwMap.crservo.get("intake");
 

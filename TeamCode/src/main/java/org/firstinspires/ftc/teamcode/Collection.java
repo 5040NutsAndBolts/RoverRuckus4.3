@@ -25,53 +25,43 @@ public class Collection {
      * control for the wrist motor
      * @param toggle - when true it will move it up if down or vice-versa
      */
-    public void wrist(boolean toggle) {
 
-        //set the wrist up when slide is in
-        if(robot.collectionSlide.getCurrentPosition()<50) {
-            robot.wrist.setTargetPosition(10);
+    public double wristPosition=0;
 
-            //throws wrist up so it puts minerals into scoring bucket
-            if(robot.wrist.getCurrentPosition() >50) {
-                robot.wrist.setPower(1);
-            }else {
-                if (wristReset == true) {
-                    robot.wrist.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    robot.wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    wristReset = false;
-                }
-                robot.wrist.setPower(0.3);
-            }
-            //will set the wrist all the way down when the slide is extended out
+    public void wrist(boolean toggle)
+    {
+
+        robot.wristRight.setPosition(wristPosition);
+        robot.wristLeft.setPosition(wristPosition);
+        if(robot.collectionSlide.getCurrentPosition()<50)
+        {
+
+            wristPosition=0;
             wristDown = true;
+
+        } else if(!wristDown){
+
+            wristPosition=.4;
+
+        }else {
+
+            wristPosition=.7;
+
         }
-        //sets wrist part way up
-        else if(!wristDown) {
-            robot.wrist.setPower(0.3);
-            robot.wrist.setTargetPosition(400);
-            wristReset = true;
-        }
-        //sets wrist all the way down
-        else {
-            robot.wrist.setTargetPosition(680);
-            if(robot.wrist.getCurrentPosition() < robot.wrist.getTargetPosition()-100)
-                robot.wrist.setPower(0.7);
-            else
-                robot.wrist.setPower(0.3);
-            wristReset = true;
-        }
-        //toggle for the wrist when toggle is true
-        if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>50) {
+        if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>50)
+        {
             wristToggle = true;
 
-            if(robot.wrist.getCurrentPosition() > 500) {
+            if(robot.wristLeft.getPosition() > .3)
+            {
                 wristDown = false;
             }
             else {
                 wristDown = true;
             }
         }
-        else if(!toggle) {
+        else if(!toggle)
+        {
             wristToggle = false;
         }
     }
