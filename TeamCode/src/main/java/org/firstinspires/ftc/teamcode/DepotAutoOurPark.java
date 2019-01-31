@@ -45,7 +45,6 @@ public class DepotAutoOurPark extends AutoMethods {
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        robot.wrist.setPower(0.5);
         robot.wrist.setTargetPosition(0);
         robot.collectionSlide.setPower(0.3);
         robot.collectionSlide.setTargetPosition(0);
