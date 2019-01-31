@@ -37,7 +37,7 @@ public class Hardware {
     public DcMotor hangingMotor = null;
 
     //intake mechanism
-    public CRServo intake = null;
+    public DcMotor intake = null;
     public DcMotor collectionSlide = null;
     public Servo wristLeft = null;
     public Servo wristRight = null;
@@ -106,7 +106,8 @@ public class Hardware {
 
         wristLeft.setDirection(Servo.Direction.REVERSE);
 
-        intake = hwMap.crservo.get("intake");
+        intake = hwMap.dcMotor.get("intake");
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         teamMarker = hwMap.servo.get("teamMarker");
