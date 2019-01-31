@@ -67,10 +67,10 @@ public class Collection {
      */
     public void inTake(boolean in, boolean out) {
         if(in) {
-            robot.intake.setPower(-0.5);
+            robot.intake.setPower(-1);
         }
         else if(out) {
-            robot.intake.setPower(0.5);
+            robot.intake.setPower(1);
         }
         else{
             robot.intake.setPower(0);
