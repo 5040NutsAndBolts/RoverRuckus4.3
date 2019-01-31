@@ -45,20 +45,14 @@ public class Collection {
 
         }else {
 
-            wristPosition=.7;
+            wristPosition=1;
 
         }
         if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>50)
         {
             wristToggle = true;
 
-            if(robot.wristLeft.getPosition() > .3)
-            {
-                wristDown = false;
-            }
-            else {
-                wristDown = true;
-            }
+            wristDown = !(robot.wristLeft.getPosition() > .3);
         }
         else if(!toggle)
         {
