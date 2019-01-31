@@ -10,7 +10,6 @@ public class NewMineralScorer {
     private boolean blockToggle = false;
     private int slideTargetPos = 1700;
     private int blockBarsOpen = 0;
-    private double blockBarsTargetPos = 1.0;
 
     public NewMineralScorer(Hardware r){ robot = r; }
 
@@ -55,13 +54,13 @@ public class NewMineralScorer {
         if (open && blockBarsOpen == 0 && !blockToggle) {
             blockToggle = true;
             blockBarsOpen = 1;
-            robot.goldBlockBar.setPosition(blockBarsTargetPos);
+            robot.goldBlockBar.setPosition(1);
         // drops silver and gold
         } else if (open && blockBarsOpen == 1 && !blockToggle) {
             blockBarsToggle = true;
             blockBarsOpen = 2;
-            robot.goldBlockBar.setPosition(blockBarsTargetPos);
-            robot.silverBlockBar.setPosition(blockBarsTargetPos);
+            robot.goldBlockBar.setPosition(1);
+            robot.silverBlockBar.setPosition(1);
         // closes bars
         } else if ((open && blockBarsOpen == 2 && !blockToggle)
                 || robot.scoringSlide.getCurrentPosition()<=200){
