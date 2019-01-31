@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.os.Environment;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 
 @TeleOp(name="readFile", group="Teleop")
+@Disabled
 public class readFile extends OpMode{
     FileHelper file = null;
 

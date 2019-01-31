@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import java.io.IOException;
 
 @TeleOp(name="File Outputs", group="Teleop")
+@Disabled
 public class FileOutputTesting extends OpMode{
     FileHelper file = null;
     int i = 0;

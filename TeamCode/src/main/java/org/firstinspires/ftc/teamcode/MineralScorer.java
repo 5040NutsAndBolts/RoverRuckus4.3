@@ -64,8 +64,8 @@ public class MineralScorer {
         //puts the bar to drop gold
         if(open && barPlace==0 && !barToggle) {
             barToggle = true;
-            barPlace = 1;
-            robot.blockingBar.setPosition(0.4);
+            barPlace = 2;
+            robot.blockingBar.setPosition(1);
         }
         //puts the bar to drop silver and gold
         else if(open && barPlace==1 && !barToggle) {

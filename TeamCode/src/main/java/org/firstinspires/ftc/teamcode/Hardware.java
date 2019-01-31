@@ -39,7 +39,8 @@ public class Hardware {
     //intake mechanism
     public CRServo intake = null;
     public DcMotor collectionSlide = null;
-    public DcMotor wrist = null;
+    public Servo wristLeft = null;
+    public Servo wristRight = null;
 
     public Servo teamMarker = null;
 
@@ -80,6 +81,7 @@ public class Hardware {
         hangingMotor = hwMap.dcMotor.get("hangingMotor");
         hangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hangingMotor.setTargetPosition(20);
 
 
         //drive train motor setup
@@ -98,10 +100,11 @@ public class Hardware {
         collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        wrist = hwMap.dcMotor.get("wrist");
-        wrist.setDirection(DcMotor.Direction.REVERSE);
-        wrist.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wristLeft = hwMap.servo.get("wristRight");
+
+        wristRight = hwMap.servo.get("wristRight");
+
+        wristLeft.setDirection(Servo.Direction.REVERSE);
 
         intake = hwMap.crservo.get("intake");
 

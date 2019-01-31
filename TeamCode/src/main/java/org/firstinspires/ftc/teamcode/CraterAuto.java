@@ -5,7 +5,7 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -26,6 +26,7 @@ public class CraterAuto extends AutoMethods {
      */
     @Override
     public void runOpMode() {
+        ElapsedTime time = new ElapsedTime();
         //sets up the objects for the other classes
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
@@ -59,15 +60,21 @@ public class CraterAuto extends AutoMethods {
         detector.useDefaults();
         dogeCVSetup(detector);
 
+
+        boolean spotToggle = false;
         //waits here til you hit start or stop
         while(!isStarted()) {
-            telemetry.addLine("ready");
-            if(gamepad1.x){
+            if(gamepad1.x && !spotToggle){
+                spotToggle = true;
                 if(driverSpot.equals("Crater"))
                     driverSpot = "Depot";
                 else
                     driverSpot = "Crater";
             }
+            else if(!gamepad1.x && spotToggle)
+                spotToggle = false;
+
+            telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
             telemetry.addData("Driver spot",driverSpot);
             telemetry.update();
         }
@@ -109,7 +116,7 @@ public class CraterAuto extends AutoMethods {
             //rotates to face gold
             runToRotateWait(35,robot,driveTrain);
             //knocks off gold
-            runToForwardWait(30,robot,driveTrain);
+            runToForwardWait(35,robot,driveTrain);
             //rotates to be level with wall
             runToRotateWait(-40,robot,driveTrain);
             //runs into wall
@@ -118,6 +125,9 @@ public class CraterAuto extends AutoMethods {
             runToRotateWait(45,robot,driveTrain);
             runToSidewaysWait(15,robot,driveTrain);
         }
+
+        time.reset();
+        while(time.seconds() < 5 && opModeIsActive()){}
 
         //moves into the depot
         runToForwardWait(-50, robot, driveTrain);
@@ -130,7 +140,7 @@ public class CraterAuto extends AutoMethods {
 
         runToSidewaysWait(3,robot,driveTrain);
         //parks in crater
-        runToForwardWait(80,robot,driveTrain);
+        runToForwardWait(70,robot,driveTrain);
 
         // Writes gyro angle to the data file
         writeToFile(robot, driverSpot);
