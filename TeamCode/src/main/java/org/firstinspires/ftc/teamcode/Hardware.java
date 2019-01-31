@@ -105,7 +105,6 @@ public class Hardware {
 
         intake = hwMap.crservo.get("intake");
 
-
         teamMarker = hwMap.servo.get("teamMarker");
     }
 }
