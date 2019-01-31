@@ -25,6 +25,8 @@ public class Hardware {
     //scoring mechanism
     public DcMotor scoringSlide = null;
     public Servo blockingBar = null;
+    public Servo goldBlockBar = null;
+    public Servo silverBlockBar = null;
     public Servo bopper = null;
 
     //drive train motors
@@ -73,6 +75,8 @@ public class Hardware {
         scoringSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         blockingBar = hwMap.servo.get("blockingBar");
+        goldBlockBar = hwMap.servo.get("goldBlockBar");
+        silverBlockBar = hwMap.servo.get("silverBlockBar");
         bopper = hwMap.servo.get("bopper");
 
 

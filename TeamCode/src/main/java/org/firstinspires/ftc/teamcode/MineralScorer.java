@@ -1,44 +1,85 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- * Class for the scoring mechanism
+ * New class for the scoring mechanism
  */
 public class MineralScorer {
+    private Hardware robot;
 
-    Hardware robot;
+    private boolean scoringToggle = false;
+    private boolean blockToggle = false;
+    private int slideTargetPos = 1700;
+    private int blockBarsOpen = 0;
 
-    private boolean scoringToggle = false;     //toggle for the scoring slide
-    private  boolean barToggle = false;        //toggle for the scoring bar
-    private int barPlace = 0;                  //keeps track of what place the scoring bar is in
-
-    MineralScorer(Hardware r) {
-        robot = r;
-    }
+    public MineralScorer(Hardware r){ robot = r; }
 
     /**
-     * this method extends the arm on the back of the robot up to the lander
-     * @param toggle - when true it will move it up if down or vice-versa
+     * Method to move the mineral scoring slide up or down
+     * @param toggle - When true moves slide up if down, when false moves slide down if up
      */
     public void slide(boolean toggle){
-        //toggle for the scoring slide
-        if(toggle && !scoringToggle) {
+        if (toggle && !scoringToggle){
             scoringToggle = true;
 
             if(robot.scoringSlide.getCurrentPosition() < 80) {
-                robot.scoringSlide.setTargetPosition(1700);
+                robot.scoringSlide.setTargetPosition(slideTargetPos);
                 robot.scoringSlide.setPower(1);
             }
             else {
                 robot.scoringSlide.setTargetPosition(0);
                 robot.scoringSlide.setPower(0.8);
             }
-        }
-        else if(!toggle) {
+        } else if (!toggle)
             scoringToggle = false;
-        }
+
         //if the scoring slide motor is down and it is supposed to be down it sets the power to 0
         if(robot.scoringSlide.getCurrentPosition() <= 20 && robot.scoringSlide.getTargetPosition() == 0) {
             robot.scoringSlide.setPower(0);
+        }
+    }
+
+    /**
+     * Method to block minerals from dropping too early.
+     * Uses pair of servos to block minerals from going out too early.
+     * Servos block minerals from being able to fall until the slide is up and sensor sees lander
+     * @param open - Toggle for moving the bars
+     */
+    public void mineralBars(boolean open) {
+        /* Not to be used until the proper parts get put onto the robot
+         boolean slideUp = robot.scoringSlide.getCurrentPosition() <= slideTargetPos-100;
+         boolean landerInSight = TBD;
+         boolean droppingSilver = TBD;
+
+         if (slideUp && landerInSight){
+            if (droppingSilver)
+                robot.silverBlockBar.setPosition(1);
+            robot.goldBlockBar.setPosition(1);
+         } else {
+            robot.goldBlockBar.setPosition(0);
+            robot.silverBlockBar.setPosition(0);
+         }
+         */
+
+        // drops gold
+        if (open && blockBarsOpen == 0 && !blockToggle) {
+            blockToggle = true;
+            blockBarsOpen = 1;
+            robot.goldBlockBar.setPosition(.5);
+            // drops silver and gold
+        } else if (open && blockBarsOpen == 1 && !blockToggle) {
+            blockToggle = true;
+            blockBarsOpen = 2;
+            robot.goldBlockBar.setPosition(.5);
+            robot.silverBlockBar.setPosition(.5);
+            // closes bars
+        } else if ((open && blockBarsOpen == 2 && !blockToggle)
+                || robot.scoringSlide.getCurrentPosition() <= 200){
+            blockToggle = true;
+            blockBarsOpen = 0;
+            robot.goldBlockBar.setPosition(0);
+            robot.silverBlockBar.setPosition(0);
+        } else if(!open && blockToggle) {
+            blockToggle = false;
         }
     }
 
@@ -52,36 +93,6 @@ public class MineralScorer {
         }
         else {
             robot.bopper.setPosition(0.04);
-        }
-    }
-
-    /**
-     *controls the scoring bucket bar to drop the minerals
-     * the bar goes all the way down when the slide is down
-     * @param open - toggle for moving the bar
-     */
-    public void mineralBar(boolean open) {
-        //puts the bar to drop gold
-        if(open && barPlace==0 && !barToggle) {
-            barToggle = true;
-            barPlace = 1;
-            robot.blockingBar.setPosition(0.4);
-        }
-        //puts the bar to drop silver and gold
-        else if(open && barPlace==1 && !barToggle) {
-            barToggle = true;
-            barPlace = 2;
-            robot.blockingBar.setPosition(1);
-        }
-        //if the bar is in the second position or the slide is down it puts the bar all the way down
-        else if((open && barPlace==2 && !barToggle)
-                || robot.scoringSlide.getCurrentPosition() <= 200) {
-            barToggle = true;
-            barPlace = 0;
-            robot.blockingBar.setPosition(0);
-        }
-        else if(!open && barToggle) {
-            barToggle = false;
         }
     }
 }
