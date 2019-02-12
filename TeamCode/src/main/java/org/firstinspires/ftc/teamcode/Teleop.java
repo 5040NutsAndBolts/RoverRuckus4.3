@@ -20,7 +20,6 @@ public class Teleop extends OpMode {
     private Hardware robot;
     private MineralScorer mineralScorer;
     private MecanumDrive driveTrain;
-    private LiftMechanism lifter;
     private Collection collection;
 
     /**
@@ -29,7 +28,6 @@ public class Teleop extends OpMode {
     public Teleop() {
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
-        lifter = new LiftMechanism(robot);
         collection = new Collection(robot);
         mineralScorer = new MineralScorer(robot);
     }
@@ -108,9 +106,6 @@ public class Teleop extends OpMode {
         collection.inTake(rightBumper2, leftBumper2);
         collection.slide(rightBumper1, leftBumper1);
 
-        //the lift call
-        lifter.lift(leftTrigger1, dPadDown1);
-
         //slows down the driving when the scoring slide is up
         if(robot.scoringSlide.getCurrentPosition() > 200) {
             rightStickX1 /= 2;
@@ -141,9 +136,6 @@ public class Teleop extends OpMode {
         telemetry.addData("front right drive", robot.rightDriveFront.getPower());
         telemetry.addData("rear right drive", robot.rightDriveRear.getPower());
         telemetry.addLine("--------HANGING MOTOR--------");
-        telemetry.addData("hanging motor position", robot.hangingMotor.getCurrentPosition());
-        telemetry.addData("hanging motor set position", robot.hangingMotor.getTargetPosition());
-        telemetry.addData("hanging motor power", robot.hangingMotor.getPower());
         telemetry.addLine("--------COLLECTION WRIST--------");
         telemetry.addData("wrist Position", robot.wrist.getCurrentPosition());
         telemetry.addData("wrist Power", robot.wrist.getPower());

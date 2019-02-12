@@ -30,7 +30,7 @@ class AutoMethods extends LinearOpMode {
     public void dogeCVSetup(GoldAlignDetector detector) {
         // Optional Tuning
         detector.alignSize = 500; // How wide (in pixels) is the range in which the gold object will be aligned.
-                                  // (Represented by green bars in the preview)
+        // (Represented by green bars in the preview)
         detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
@@ -156,37 +156,25 @@ class AutoMethods extends LinearOpMode {
      */
     public int landing(Hardware robot, GoldAlignDetector detector, MecanumDrive driveTrain) {
         int goldPos = 3;
-        //lowers hang mechanism
-        robot.hangingMotor.setTargetPosition(6900);
-        robot.hangingMotor.setPower(1);
-        while(opModeIsActive() && robot.hangingMotor.getCurrentPosition() < 6800) {
-            //scans for gold mineral spot
-            if(robot.hangingMotor.getCurrentPosition() < 2000) {
-                if (detector.getXPosition() > 200) {
-                    goldPos = 2;
-                    detector.disable();
-                } else if (detector.getXPosition() > 10) {
-                    goldPos = 1;
-                    detector.disable();
-                }
-            }
-            else {
-                detector.disable();
-            }
-            telemetry.addData("detector aligned", detector.getAligned());
-            telemetry.addData("goldPos",goldPos);
-            telemetry.addData("x pos of gold", detector.getXPosition());
-            telemetry.addData("hanging slide power", robot.hangingMotor.getPower());
-            telemetry.addData("hanging motor pos",robot.hangingMotor.getCurrentPosition());
-            telemetry.update();
+        if (detector.getXPosition() > 200)
+        {
+            goldPos = 2;
+            detector.disable();
+        } else if (detector.getXPosition() > 10)
+        {
+            goldPos = 1;
+            detector.disable();
+        } else
+        {
+            detector.disable();
         }
+        telemetry.addData("detector aligned", detector.getAligned());
+        telemetry.addData("goldPos",goldPos);
+        telemetry.addData("x pos of gold", detector.getXPosition());
+        telemetry.update();
 
-        //moves hook off the lander
         runToForwardWait(-4,robot,driveTrain);
-        robot.hangingMotor.setTargetPosition(0);
-
-        //moves away from hook
         runToSidewaysWait(7,robot,driveTrain);
         return goldPos;
-    }
+}
 }

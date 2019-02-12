@@ -34,7 +34,7 @@ public class Hardware {
     public DcMotor rightDriveRear = null;
 
 
-    public DcMotor hangingMotor = null;
+    //public DcMotor hangingMotor = null;
 
     //intake mechanism
     public CRServo intake = null;
@@ -73,10 +73,10 @@ public class Hardware {
         bopper = hwMap.servo.get("bopper");
 
 
-        //hanging mechanism
+        /*hanging mechanism
         hangingMotor = hwMap.dcMotor.get("hangingMotor");
         hangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);*/
 
 
         //drive train motor setup
@@ -101,7 +101,6 @@ public class Hardware {
         wrist.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         intake = hwMap.crservo.get("intake");
-
 
         teamMarker = hwMap.servo.get("teamMarker");
     }
