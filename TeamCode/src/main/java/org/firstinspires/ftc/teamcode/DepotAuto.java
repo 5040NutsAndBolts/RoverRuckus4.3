@@ -58,49 +58,50 @@ public class DepotAuto extends AutoMethods {
             //rotates to face gold
             runToRotateWait(-60, robot, driveTrain);
             //knocks off gold
-            runToForwardWait(-35, robot, driveTrain);
+            //runToRotateWait(
+            //runToForwardWait(-35, robot, driveTrain);
             //rotates to be level with wall
-            runToRotateWait(-80, robot, driveTrain);
+            //runToRotateWait(-80, robot, driveTrain);
             //runs into wall
-            runToSidewaysWait(-10,robot,driveTrain);
-            runToForwardWait(-30,robot,driveTrain);
-            runToSidewaysWait(-5,robot,driveTrain);
+            //runToSidewaysWait(-10,robot,driveTrain);
+            //runToForwardWait(-30,robot,driveTrain);
+            //runToSidewaysWait(-5,robot,driveTrain);
         }
         //GOLD IN THE MIDDLE
         else if(goldPos == 2) {
             //rotates to face gold
             runToRotateWait(-100,robot,driveTrain);
             //knocks off gold
-            runToForwardWait(-50,robot,driveTrain);
+            //runToForwardWait(-50,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(-40,robot,driveTrain);
+            //runToRotateWait(-40,robot,driveTrain);
             //runs into wall
-            runToSidewaysWait(-15,robot,driveTrain);
+            //runToSidewaysWait(-15,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
             runToRotateWait(35,robot,driveTrain);
             //knocks off gold
-            runToForwardWait(35,robot,driveTrain);
+            //runToForwardWait(35,robot,driveTrain);
             //rotates to be level with wall
-            runToRotateWait(-83,robot,driveTrain);
+            //runToRotateWait(-83,robot,driveTrain);
             //runs into wall
-            runToForwardWait(-35,robot,driveTrain);
-            runToRotateWait(-90,robot,driveTrain);
-            runToSidewaysWait(-15,robot,driveTrain);
+            //runToForwardWait(-35,robot,driveTrain);
+            //runToRotateWait(-90,robot,driveTrain);
+            //runToSidewaysWait(-15,robot,driveTrain);
         }
 
         //moves into the depot
 
         //places the team marker in the depot
-        robot.teamMarker.setPosition(.27);
+        //robot.teamMarker.setPosition(.27);
 
         //powers of the hanging motor to conserve power and not break the motor
 
 
         //parks in crater
-        runToForwardWait(75,robot,driveTrain);
+        //runToForwardWait(75,robot,driveTrain);
 
     }
 }
