@@ -12,7 +12,6 @@ public class DetectorViewCheck extends AutoMethods {
 
     private Hardware robot;
     private MecanumDrive driveTrain;
-    private LiftMechanism lifter;
     private ElapsedTime wait;
     private GoldAlignDetector detector;
 
@@ -20,7 +19,6 @@ public class DetectorViewCheck extends AutoMethods {
     public void runOpMode() throws InterruptedException {
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
-        lifter = new LiftMechanism(robot);
         wait = new ElapsedTime();
 
         double power;
@@ -48,8 +46,6 @@ public class DetectorViewCheck extends AutoMethods {
             telemetry.addData("detector aligned", detector.getAligned());
             telemetry.addData("goldPos",goldPos);
             telemetry.addData("x pos of gold", detector.getXPosition());
-            telemetry.addData("hanging slide power", robot.hangingMotor.getPower());
-            telemetry.addData("hanging motor pos",robot.hangingMotor.getCurrentPosition());
             telemetry.update();
         }
     }

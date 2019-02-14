@@ -92,7 +92,6 @@ public class DepotAutoOurPark extends AutoMethods {
         robot.teamMarker.setPosition(.27);
 
         //powers of the hanging motor to conserve power and not break the motor
-        robot.hangingMotor.setPower(0);
 
         //parks in crater
         runToForwardWait(80,robot,driveTrain);

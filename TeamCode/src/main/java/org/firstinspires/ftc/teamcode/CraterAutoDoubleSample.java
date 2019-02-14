@@ -122,9 +122,6 @@ public class CraterAutoDoubleSample extends AutoMethods {
         //places the team marker in the depot
         robot.teamMarker.setPosition(.27);
 
-        //powers of the hanging motor to conserve power and not break the motor
-        robot.hangingMotor.setPower(0);
-
         runToSidewaysWait(3,robot,driveTrain);
         //parks in crater
         runToForwardWait(75,robot,driveTrain);
