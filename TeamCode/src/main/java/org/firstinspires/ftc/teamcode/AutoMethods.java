@@ -154,8 +154,11 @@ class AutoMethods extends LinearOpMode {
      * @param driveTrain - the MecanumDrive object so it can use movements within those classes
      * @return - returns what position the gold mineral is in, 1-is left,2-is middle,3-is right from the phone.
      */
-    public int landing(Hardware robot, GoldAlignDetector detector, MecanumDrive driveTrain) {
+    public int landing(Hardware robot, GoldAlignDetector detector, MecanumDrive driveTrain)
+    {
+
         int goldPos = 3;
+        sleep(1000);
         if (detector.getXPosition() > 200)
         {
             goldPos = 2;
