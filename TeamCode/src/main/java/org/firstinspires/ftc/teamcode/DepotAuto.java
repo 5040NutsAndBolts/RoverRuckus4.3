@@ -83,6 +83,16 @@ public class DepotAuto extends AutoMethods {
             runToRotateWait(20,robot,driveTrain);
             runToRotateWait(-40,robot,driveTrain);
             runToRotateWait(20,robot,driveTrain);
+            while(robot.wrist.getCurrentPosition()>5)
+            {
+
+                robot.wrist.setTargetPosition(0);
+
+                //throws wrist up so it puts minerals into scoring bucket
+                if(robot.wrist.getCurrentPosition() >10)
+                    robot.wrist.setPower(1);
+
+            }
             //rotates to be level with wall
           //  runToRotateWait(-40,robot,driveTrain);
             //runs into wall
