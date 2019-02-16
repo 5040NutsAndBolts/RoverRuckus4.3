@@ -14,6 +14,7 @@ public class DepotAuto extends AutoMethods {
     //class objects
     private Hardware robot;
     private MecanumDrive driveTrain;
+    private Collection collection;
     private GoldAlignDetector detector;
 
     /**
@@ -23,6 +24,7 @@ public class DepotAuto extends AutoMethods {
     public void runOpMode() {
         //sets up the objects for the other classes
         robot = new Hardware();
+        collection = new Collection(robot);
         driveTrain = new MecanumDrive(robot);
 
         //initializes the robot hardware and sets powers so things don't move
@@ -57,8 +59,9 @@ public class DepotAuto extends AutoMethods {
         if(goldPos == 1) {
             //rotates to face gold
             runToRotateWait(-60, robot, driveTrain);
-            //knocks off gold
-            runToForwardWait(-35, robot, driveTrain);
+            //pick up gold
+            runToForwardWait(-20, robot, driveTrain);
+
             //rotates to be level with wall
             runToRotateWait(-80, robot, driveTrain);
             //runs into wall
@@ -71,18 +74,26 @@ public class DepotAuto extends AutoMethods {
             //rotates to face gold
             runToRotateWait(-100,robot,driveTrain);
             //knocks off gold
-            runToForwardWait(-50,robot,driveTrain);
-            //rotates to be level with wall
+            runToForwardWait(-1,robot,driveTrain);
+            sleep(500);
+            robot.wrist.setTargetPosition(500);
+            while(robot.wrist.getCurrentPosition()<480){}
+            collection.inTake(false,true);
+            driveTrain.powerSet(.1);
+            runToRotateWait(20,robot,driveTrain);
             runToRotateWait(-40,robot,driveTrain);
+            runToRotateWait(20,robot,driveTrain);
+            //rotates to be level with wall
+          //  runToRotateWait(-40,robot,driveTrain);
             //runs into wall
-            runToSidewaysWait(-15,robot,driveTrain);
+          //  runToSidewaysWait(-15,robot,driveTrain);
         }
         //GOLD ON THE RIGHT
         else {
             //rotates to face gold
             runToRotateWait(35,robot,driveTrain);
             //knocks off gold
-            runToForwardWait(35,robot,driveTrain);
+            runToForwardWait(20,robot,driveTrain);
             //rotates to be level with wall
             runToRotateWait(-83,robot,driveTrain);
             //runs into wall
@@ -94,13 +105,13 @@ public class DepotAuto extends AutoMethods {
         //moves into the depot
 
         //places the team marker in the depot
-        robot.teamMarker.setPosition(.27);
+        //robot.teamMarker.setPosition(.27);
 
         //powers of the hanging motor to conserve power and not break the motor
 
 
         //parks in crater
-        runToForwardWait(75,robot,driveTrain);
+        //runToForwardWait(75,robot,driveTrain);
 
     }
 }
