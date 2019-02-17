@@ -177,7 +177,6 @@ class AutoMethods extends LinearOpMode {
         telemetry.update();
 
         runToForwardWait(-4,robot,driveTrain);
-        runToSidewaysWait(7,robot,driveTrain);
         return goldPos;
 }
 }
