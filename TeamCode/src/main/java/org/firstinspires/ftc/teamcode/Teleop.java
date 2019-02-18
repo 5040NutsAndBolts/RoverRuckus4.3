@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -44,7 +45,7 @@ public class Teleop extends OpMode {
      * init's the hardware of the robot
      */
     public void init() {
-        robot.init(hardwareMap);
+        robot.init(hardwareMap,false);
         //gyro setup
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -75,9 +76,6 @@ public class Teleop extends OpMode {
      */
     @Override
     public void start() {
-        changeAdjust = true;
-        robot.teamMarker.setPosition(0.27);
-        if (changeAdjust){
             // creates a new reference for the file and parses the line to a double
             //      Will fix later if the exportData will always be a double
             try {
@@ -89,8 +87,9 @@ public class Teleop extends OpMode {
                 //writeToFile(robot);
             } catch (Exception e) {
                 driveTrain.adjust = 0;
+                robot.resetMotors();
             }
-        }
+            robot.scoringStop.setPosition(0);
     }
 
     /**
@@ -106,6 +105,7 @@ public class Teleop extends OpMode {
         boolean dPadDown1 = gamepad1.dpad_down;
         boolean dPadRight1 = gamepad1.dpad_right;
         boolean dPadLeft1 = gamepad1.dpad_left;
+        boolean dPadUp1 = gamepad1.dpad_up;
         boolean x1 = gamepad1.x;
         boolean leftTrigger1 = gamepad1.left_trigger > 0.3;
 
@@ -120,62 +120,61 @@ public class Teleop extends OpMode {
 
         //the scoring method calls
         mineralScorer.slide(x2);
-        mineralScorer.mineralBar(rightTrigger2);
-        mineralScorer.bop(y2);
+        mineralScorer.mineralStop(rightTrigger2);
 
         //the collection method calls
         collection.wrist(leftTrigger2);
-        collection.inTake(rightBumper2, leftBumper2);
+        collection.inTake(leftBumper2, rightBumper2);
         collection.slide(rightBumper1, leftBumper1);
+        collection.inTakeStop(gamepad2.y);
 
         //the lift call
         lifter.lift(leftTrigger1, dPadDown1);
 
-        //slows down the driving when the scoring slide is up
-        if(robot.scoringSlide.getCurrentPosition() > 200) {
-            rightStickX1 /= 2;
-            leftStickX1 /= 2;
-            leftStickY1 /= 2;
-        }
-
-        if(rightStickX1 == 0) {
             if(dPadLeft1) {
-                rightStickX1 = -0.3;
+                leftStickX1 = -0.4;
             }
             else if(dPadRight1) {
-                rightStickX1 = 0.3;
+                leftStickX1 = 0.4;
             }
-        }
-        driveTrain.orientedDrive(leftStickY1, leftStickX1, rightStickX1,x1);
+            else if(dPadUp1) {
+                leftStickY1 = -0.4;
+            }
+            else if(dPadDown1) {
+                leftStickY1 = 0.4;
+            }
+        driveTrain.orientedDrive(leftStickY1, leftStickX1, -rightStickX1,x1);
 
 
         //telemetry lines
         telemetry.addLine("--------IMU--------");
-        telemetry.addData("imu first angle", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
-        telemetry.addData("imu heading", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+        telemetry.addData("imu heading radians", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
+        telemetry.addData("imu heading degrees", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
         telemetry.addData("adjust", driveTrain.adjust);
-        telemetry.addData("imu calibrated?", robot.imu.isGyroCalibrated());
+        telemetry.addData("imu calibration", robot.imu.isGyroCalibrated());
         telemetry.addLine("-------DRIVE MOTORS-------");
         telemetry.addData("front left drive", robot.leftDriveFront.getPower());
         telemetry.addData("rear left drive", robot.leftDriveRear.getPower());
         telemetry.addData("front right drive", robot.rightDriveFront.getPower());
         telemetry.addData("rear right drive", robot.rightDriveRear.getPower());
         telemetry.addLine("--------HANGING MOTOR--------");
-        telemetry.addData("hanging motor position", robot.hangingMotor.getCurrentPosition());
-        telemetry.addData("hanging motor set position", robot.hangingMotor.getTargetPosition());
-        telemetry.addData("hanging motor power", robot.hangingMotor.getPower());
+        telemetry.addData("hanging motor position", robot.hang.getCurrentPosition());
+        telemetry.addData("hanging motor target position", robot.hang.getTargetPosition());
+        telemetry.addData("hanging motor power", robot.hang.getPower());
         telemetry.addLine("--------COLLECTION WRIST--------");
         telemetry.addData("Left Wrist Position", robot.wristLeft.getPosition());
         telemetry.addData("Right Wrist Position", robot.wristRight.getPosition());
-        //telemetry.addData("wrist Power", robot.wrist.getPower());
+        telemetry.addLine("--------COLLECTION INTAKE--------");
+        telemetry.addData("Intake Power", robot.intake.getPower());
         telemetry.addLine("--------COLLECTION SLIDE--------");
         telemetry.addData("collection slide Position", robot.collectionSlide.getCurrentPosition());
         telemetry.addData("collection slide power", robot.collectionSlide.getPower());
         telemetry.addLine("-----SCORING SLIDE-----");
         telemetry.addData("scoring slide position", robot.scoringSlide.getCurrentPosition());
         telemetry.addData("scoring slide power", robot.scoringSlide.getPower());
-        telemetry.addLine("-----MINERAL DROP BAR-----");
-        telemetry.addData(" scoring bar position", robot.blockingBar.getPosition());
+        telemetry.addLine("-----MINERAL Stop BAR-----");
+        telemetry.addData("right Trigger 2",rightTrigger2);
+        telemetry.addData("scoring bar position", robot.scoringStop.getPosition());
         telemetry.update();
     }
 }

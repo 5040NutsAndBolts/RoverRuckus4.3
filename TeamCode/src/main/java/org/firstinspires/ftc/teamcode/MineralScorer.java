@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.abs;
+
 /**
  * Class for the scoring mechanism
  */
@@ -9,7 +11,7 @@ public class MineralScorer {
 
     private boolean scoringToggle = false;     //toggle for the scoring slide
     private  boolean barToggle = false;        //toggle for the scoring bar
-    private int barPlace = 0;                  //keeps track of what place the scoring bar is in
+    private double slidePower = 0.3;
 
     MineralScorer(Hardware r) {
         robot = r;
@@ -24,35 +26,25 @@ public class MineralScorer {
         if(toggle && !scoringToggle) {
             scoringToggle = true;
 
-            if(robot.scoringSlide.getCurrentPosition() < 80) {
-                robot.scoringSlide.setTargetPosition(1700);
-                robot.scoringSlide.setPower(1);
+            if(robot.scoringSlide.getTargetPosition()==0) {
+                robot.scoringSlide.setTargetPosition(1000);
             }
             else {
                 robot.scoringSlide.setTargetPosition(0);
-                robot.scoringSlide.setPower(0.8);
             }
         }
         else if(!toggle) {
             scoringToggle = false;
         }
         //if the scoring slide motor is down and it is supposed to be down it sets the power to 0
-        if(robot.scoringSlide.getCurrentPosition() <= 20 && robot.scoringSlide.getTargetPosition() == 0) {
-            robot.scoringSlide.setPower(0);
+        //if(robot.scoringSlide.getCurrentPosition() <= 20 && robot.scoringSlide.getTargetPosition() == 0) {
+         //   robot.scoringSlide.setPower(0.3);
+        if(abs(robot.scoringSlide.getCurrentPosition()-robot.scoringSlide.getTargetPosition()) < 50) {
+            slidePower=0.5;
         }
-    }
-
-    /**
-     * control for the servo that is right before the scoring bucket
-     * @param hit - When true it goes out and hits the mineral over.
-     */
-    public void bop(boolean hit) {
-        if(hit) {
-            robot.bopper.setPosition(0.16);
-        }
-        else {
-            robot.bopper.setPosition(0.04);
-        }
+        else
+            slidePower = 1;
+        robot.scoringSlide.setPower(slidePower);
     }
 
     /**
@@ -60,25 +52,17 @@ public class MineralScorer {
      * the bar goes all the way down when the slide is down
      * @param open - toggle for moving the bar
      */
-    public void mineralBar(boolean open) {
-        //puts the bar to drop gold
-        if(open && barPlace==0 && !barToggle) {
+    public void mineralStop(boolean open) {
+        if(robot.scoringSlide.getCurrentPosition()<100)
+            robot.scoringStop.setPosition(0);
+        else if(open && !barToggle) {
+            if(robot.scoringStop.getPosition() == 0.5){
+                robot.scoringStop.setPosition(0);
+            }
+            else {
+                robot.scoringStop.setPosition(0.5);
+            }
             barToggle = true;
-            barPlace = 2;
-            robot.blockingBar.setPosition(1);
-        }
-        //puts the bar to drop silver and gold
-        else if(open && barPlace==1 && !barToggle) {
-            barToggle = true;
-            barPlace = 2;
-            robot.blockingBar.setPosition(1);
-        }
-        //if the bar is in the second position or the slide is down it puts the bar all the way down
-        else if((open && barPlace==2 && !barToggle)
-                || robot.scoringSlide.getCurrentPosition() <= 200) {
-            barToggle = true;
-            barPlace = 0;
-            robot.blockingBar.setPosition(0);
         }
         else if(!open && barToggle) {
             barToggle = false;

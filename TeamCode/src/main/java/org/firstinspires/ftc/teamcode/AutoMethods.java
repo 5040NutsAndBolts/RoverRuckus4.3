@@ -59,27 +59,23 @@ class AutoMethods extends LinearOpMode {
         double power = 0;
         driveTrain.powerSet(power);
         driveTrain.forwardInch(forwardInches);
-        if(forwardInches < 0) {
-            while (robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-10 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("rightDriveFront power", robot.rightDriveFront.getPower());
-                telemetry.addData("power", power);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
+        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
+            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+            telemetry.addData("power", power);
+            telemetry.update();
+            if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<400) {
+                if (power > 0.4)
+                    power -= 0.05;
+                else
+                    power += 0.05;
             }
-        }
-        else {
-            while (robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+10 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("rightDriveFront power", robot.rightDriveFront.getPower());
-                telemetry.addData("power", power);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
+            else {
+                if (power < 0.7)
+                    power += 0.05;
             }
+            driveTrain.powerSet(power);
         }
     }
 
@@ -94,28 +90,24 @@ class AutoMethods extends LinearOpMode {
         double power = 0;
         driveTrain.powerSet(power);
         driveTrain.sidewaysInch(sidewaysInches);
-        if(sidewaysInches < 0) {
-            while (robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-10 && opModeIsActive()) {
+            while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
                 telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
                 telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("rightDriveFront power", robot.rightDriveFront.getPower());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
                 telemetry.addData("power", power);
                 telemetry.update();
-                power += 0.05;
+                if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<400) {
+                    if (power > 0.4)
+                        power -= 0.05;
+                    else
+                        power += 0.05;
+                }
+                else {
+                    if (power < 0.7)
+                        power += 0.05;
+                }
                 driveTrain.powerSet(power);
             }
-        }
-        else {
-            while (robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+10 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("rightDriveFront power", robot.rightDriveFront.getPower());
-                telemetry.addData("power", power);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-        }
     }
 
     /**
@@ -129,28 +121,15 @@ class AutoMethods extends LinearOpMode {
         double power = 0;
         driveTrain.powerSet(power);
         driveTrain.rotate(degrees);
-        if(degrees > 0) {
-            while (robot.rightDriveFront.getTargetPosition() < robot.rightDriveFront.getCurrentPosition()-10 && opModeIsActive()) {
+            while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
                 telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
                 telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("rightDriveFront power", robot.rightDriveFront.getPower());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
                 telemetry.addData("power", power);
                 telemetry.update();
-                power += 0.05;
+                power+=0.05;
                 driveTrain.powerSet(power);
             }
-        }
-        else {
-            while (robot.rightDriveFront.getTargetPosition() > robot.rightDriveFront.getCurrentPosition()+10 && opModeIsActive()) {
-                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-                telemetry.addData("rightDriveFront power", robot.rightDriveFront.getPower());
-                telemetry.addData("power", power);
-                telemetry.update();
-                power += 0.05;
-                driveTrain.powerSet(power);
-            }
-        }
     }
 
     /**
@@ -160,18 +139,18 @@ class AutoMethods extends LinearOpMode {
      * @param driveTrain - the MecanumDrive object so it can use movements within those classes
      * @return - returns what position the gold mineral is in, 1-is left,2-is middle,3-is right from the phone.
      */
-    public int landing(Hardware robot, GoldAlignDetector detector, MecanumDrive driveTrain) {
+    public int landing(int rotate,Hardware robot, GoldAlignDetector detector, MecanumDrive driveTrain) {
         int goldPos = 3;
         //lowers hang mechanism
-        robot.hangingMotor.setTargetPosition(6900);
-        robot.hangingMotor.setPower(1);
-        while(opModeIsActive() && robot.hangingMotor.getCurrentPosition() < 6800) {
+        robot.hang.setTargetPosition(3000);
+        robot.hang.setPower(1);
+        while(opModeIsActive() && robot.hang.getCurrentPosition() < 2950) {
             //scans for gold mineral spot
-            if(robot.hangingMotor.getCurrentPosition() < 2000) {
-                if (detector.getXPosition() > 200) {
+            if(robot.hang.getCurrentPosition() < 2000) {
+                if (detector.getYPosition() > 300) {
                     goldPos = 2;
                     detector.disable();
-                } else if (detector.getXPosition() > 10) {
+                } else if (detector.getYPosition() > 0) {
                     goldPos = 1;
                     detector.disable();
                 }
@@ -182,17 +161,19 @@ class AutoMethods extends LinearOpMode {
             telemetry.addData("detector aligned", detector.getAligned());
             telemetry.addData("goldPos",goldPos);
             telemetry.addData("x pos of gold", detector.getXPosition());
-            telemetry.addData("hanging slide power", robot.hangingMotor.getPower());
-            telemetry.addData("hanging motor pos",robot.hangingMotor.getCurrentPosition());
+            telemetry.addData("hanging slide power", robot.hang.getPower());
+            telemetry.addData("hanging motor pos",robot.hang.getCurrentPosition());
+            telemetry.addData("hanging motor set pos",robot.hang.getTargetPosition());
             telemetry.update();
         }
 
         //moves hook off the lander
-        runToForwardWait(-4,robot,driveTrain);
-        robot.hangingMotor.setTargetPosition(0);
+        //runToForwardWait(-4,robot,driveTrain);
+        runToRotateWait(rotate,robot,driveTrain);
+        robot.hang.setTargetPosition(0);
 
         //moves away from hook
-        runToSidewaysWait(4,robot,driveTrain);
+        //runToSidewaysWait(4,robot,driveTrain);
         return goldPos;
     }
 

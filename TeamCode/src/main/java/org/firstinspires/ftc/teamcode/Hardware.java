@@ -24,8 +24,7 @@ public class Hardware {
 
     //scoring mechanism
     public DcMotor scoringSlide = null;
-    public Servo blockingBar = null;
-    public Servo bopper = null;
+    public Servo scoringStop = null;
 
     //drive train motors
     public DcMotor leftDriveFront = null;
@@ -34,15 +33,14 @@ public class Hardware {
     public DcMotor rightDriveRear = null;
 
 
-    public DcMotor hangingMotor = null;
+    public DcMotor hang = null;
 
     //intake mechanism
-    public CRServo intake = null;
+    public  DcMotor intake = null;
     public DcMotor collectionSlide = null;
     public Servo wristLeft = null;
     public Servo wristRight = null;
-
-    public Servo teamMarker = null;
+    public Servo intakeStop = null;
 
     //gyro
     public BNO055IMU imu;
@@ -62,7 +60,7 @@ public class Hardware {
      * Use at the beginning of code initialization
      * @param ahwMap the hardware declaration being passed into this class
      */
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap, boolean resetMotors) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
@@ -70,18 +68,14 @@ public class Hardware {
         //scoring mechanism
         scoringSlide = hwMap.dcMotor.get("scoringSlide");
         scoringSlide.setDirection(DcMotor.Direction.REVERSE);
-        scoringSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         scoringSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        blockingBar = hwMap.servo.get("blockingBar");
-        bopper = hwMap.servo.get("bopper");
+        scoringStop = hwMap.servo.get("scoringStop");
 
 
         //hanging mechanism
-        hangingMotor = hwMap.dcMotor.get("hangingMotor");
-        hangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        hangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hangingMotor.setTargetPosition(20);
+        hang = hwMap.dcMotor.get("hang");
+        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hang.setTargetPosition(20);
 
 
         //drive train motor setup
@@ -96,18 +90,28 @@ public class Hardware {
 
         //collection mechanism
         collectionSlide = hwMap.dcMotor.get("collectionSlide");
-        collectionSlide.setDirection(DcMotor.Direction.REVERSE);
-        collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        wristLeft = hwMap.servo.get("wristRight");
-
+        //wrist
+        wristLeft = hwMap.servo.get("wristLeft");
         wristRight = hwMap.servo.get("wristRight");
-
         wristLeft.setDirection(Servo.Direction.REVERSE);
 
-        intake = hwMap.crservo.get("intake");
+        //intake
+        intake = hwMap.dcMotor.get("intake");
+        intakeStop = hwMap.servo.get("intakeStop");
 
-        teamMarker = hwMap.servo.get("teamMarker");
+        if(resetMotors) {
+            resetMotors();
+        }
+    }
+
+    public void resetMotors(){
+        scoringSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        scoringSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }

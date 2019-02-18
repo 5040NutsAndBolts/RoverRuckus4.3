@@ -17,7 +17,8 @@ import static java.lang.Math.abs;
 public class MecanumDrive {
 
     Hardware robot;
-    double adjust = 0;
+    public double adjust = 0;
+    private boolean stop = false;
 
     /**
      * sets up the hardware refernce so you don't have to pass it as a parameter and sets the adjust
@@ -68,15 +69,29 @@ public class MecanumDrive {
             rotation /= 1.5;
         }
 
-        double v5 = P * Math.sin(robotAngle - angles.firstAngle+adjust) + P * Math.cos(robotAngle - angles.firstAngle+adjust) - rotation;
-        double v6 = P * Math.sin(robotAngle - angles.firstAngle+adjust) - P * Math.cos(robotAngle - angles.firstAngle+adjust) + rotation;
-        double v7 = P * Math.sin(robotAngle - angles.firstAngle+adjust) - P * Math.cos(robotAngle - angles.firstAngle+adjust) - rotation;
-        double v8 = P * Math.sin(robotAngle - angles.firstAngle+adjust) + P * Math.cos(robotAngle - angles.firstAngle+adjust) + rotation;
+        /*if(!stop && forward==0 && sideways==0 && rotation==0){
+            forwardInch(0);
+            powerSet(0.2);
+            stop = true;
+        }
+        else if(stop &&(forward!=0 || sideways!=0 || rotation!=0)) {
+            robot.leftDriveFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.leftDriveRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightDriveFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightDriveRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            stop = false;
+        }
+        else if(!stop) {*/
+            double v5 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
+            double v6 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
+            double v7 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
+            double v8 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
 
-        robot.leftDriveFront.setPower(v5);
-        robot.rightDriveFront.setPower(v6);
-        robot.leftDriveRear.setPower(v7);
-        robot.rightDriveRear.setPower(v8);
+            robot.leftDriveFront.setPower(v5);
+            robot.rightDriveFront.setPower(v6);
+            robot.leftDriveRear.setPower(v7);
+            robot.rightDriveRear.setPower(v8);
+        //}
     }
 
     /**
@@ -96,7 +111,7 @@ public class MecanumDrive {
      * @param fInches inches forward
      */
     public void forwardInch(int fInches){
-        int fPos = fInches*87;
+        int fPos = fInches*43;
 
         resetMotors();
 
@@ -112,7 +127,7 @@ public class MecanumDrive {
      * @param sInches inches sideways positive is to the left
      */
     public void sidewaysInch(int sInches) {
-        int sPos = sInches*129;
+        int sPos = sInches*64;
 
         resetMotors();
 
@@ -127,7 +142,7 @@ public class MecanumDrive {
      * @param degrees degrees to turn
      */
     public void rotate(int degrees) {
-        int rDegrees = degrees*19;
+        int rDegrees = degrees*9;
 
         resetMotors();
 

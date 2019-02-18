@@ -23,10 +23,10 @@ public class LiftMechanism {
         if(toggle && !liftToggle) {
             liftToggle = true;
 
-            if(robot.hangingMotor.getTargetPosition() == 20)
-                robot.hangingMotor.setTargetPosition(6900);
+            if(robot.hang.getTargetPosition() == 20)
+                robot.hang.setTargetPosition(3100);
             else {
-                robot.hangingMotor.setTargetPosition(20);
+                robot.hang.setTargetPosition(20);
             }
         }
         else if(!toggle) {
@@ -34,27 +34,27 @@ public class LiftMechanism {
         }
 
         //if the slide is down and it is supposed to be down or vice versa for up then it sets the power to 0
-        if(robot.hangingMotor.getCurrentPosition() >= robot.hangingMotor.getTargetPosition()-50 &&
-                        robot.hangingMotor.getCurrentPosition() <= robot.hangingMotor.getTargetPosition()+50) {
-            robot.hangingMotor.setPower(0);
+        if(robot.hang.getCurrentPosition() >= robot.hang.getTargetPosition()-50 &&
+                        robot.hang.getCurrentPosition() <= robot.hang.getTargetPosition()+50) {
+            robot.hang.setPower(0);
         }
         else {
-            robot.hangingMotor.setPower(1);
+            robot.hang.setPower(1);
         }
 
 
 
         //reset for the hanging motor
         if(reset) {
-            robot.hangingMotor.setPower(1);
-            robot.hangingMotor.setTargetPosition(-7000);
+            robot.hang.setPower(1);
+            robot.hang.setTargetPosition(-7000);
             downReset = true;
         }
         else if(downReset) {
-            robot.hangingMotor.setPower(0);
-            robot.hangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.hangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.hangingMotor.setTargetPosition(20);
+            robot.hang.setPower(0);
+            robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.hang.setTargetPosition(20);
             downReset = false;
         }
     }

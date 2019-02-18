@@ -30,7 +30,7 @@ public class DepotNoSample extends AutoMethods {
         driveTrain = new MecanumDrive(robot);
 
         //initializes the robot hardware and sets powers so things don't move
-        robot.init(hardwareMap);
+        robot.init(hardwareMap,true);
 
         //gyro setup
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -44,13 +44,13 @@ public class DepotNoSample extends AutoMethods {
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        robot.wrist.setPower(0.5);
-        robot.wrist.setTargetPosition(0);
+        //robot.wrist.setPower(0.5);
+        //robot.wrist.setTargetPosition(0);
         robot.collectionSlide.setPower(0.3);
         robot.collectionSlide.setTargetPosition(0);
 
         //moves the teamMarker servo to starting position
-        robot.teamMarker.setPosition(0);
+        //robot.teamMarker.setPosition(0);
 
         //sets up the detector for mineral detection
         detector = new GoldAlignDetector();
@@ -79,7 +79,7 @@ public class DepotNoSample extends AutoMethods {
         detector.enable();
 
         //lands the robot and returns what position the gold mineral is in
-        int goldPos = landing(robot,detector, driveTrain);
+        int goldPos = landing(0,robot,detector, driveTrain);
 
         runToSidewaysWait(10,robot,driveTrain);
 
@@ -92,12 +92,12 @@ public class DepotNoSample extends AutoMethods {
         runToForwardWait(-60,robot,driveTrain);
 
         //places the team marker in the depot
-        robot.teamMarker.setPosition(.27);
+        //robot.teamMarker.setPosition(.27);
 
         runToSidewaysWait(-5,robot,driveTrain);
 
         //powers of the hanging motor to conserve power and not break the motor
-        robot.hangingMotor.setPower(0);
+        robot.hang.setPower(0);
 
         //parks in crater
         runToForwardWait(85,robot,driveTrain);

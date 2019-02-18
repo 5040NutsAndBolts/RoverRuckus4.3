@@ -11,7 +11,7 @@ public class Collection {
 
     private boolean wristReset = false;
     private boolean wristToggle = false;   //toggle for the wrist
-    private boolean wristDown = true;      //when true and slide is out the wrist will be down
+    private boolean wristDown = false;      //when true and slide is out the wrist will be down
 
     /**
      * sets up the hardware so you don't have to pass it as a parameter
@@ -33,26 +33,20 @@ public class Collection {
 
         robot.wristRight.setPosition(wristPosition);
         robot.wristLeft.setPosition(wristPosition);
-        if(robot.collectionSlide.getCurrentPosition()<50)
-        {
+        if(!wristDown){
 
-            wristPosition=0;
-            wristDown = true;
-
-        } else if(!wristDown){
-
-            wristPosition=.4;
+            wristPosition=0.9;
 
         }else {
 
-            wristPosition=.7;
+            wristPosition=0.25+(.00004*robot.collectionSlide.getCurrentPosition());
 
         }
-        if(toggle && !wristToggle && robot.collectionSlide.getCurrentPosition()>50)
+        if(toggle && !wristToggle)
         {
             wristToggle = true;
 
-            if(robot.wristLeft.getPosition() > .3)
+            if(wristDown)
             {
                 wristDown = false;
             }
@@ -60,7 +54,7 @@ public class Collection {
                 wristDown = true;
             }
         }
-        else if(!toggle)
+        else if(!toggle && wristToggle)
         {
             wristToggle = false;
         }
@@ -72,11 +66,11 @@ public class Collection {
      * @param out - when true will spit out minerals
      */
     public void inTake(boolean in, boolean out) {
-        if(in) {
-            robot.intake.setPower(-0.5);
+        if(in || robot.intakeStop.getPosition()==0.37) {
+            robot.intake.setPower(-1);
         }
         else if(out) {
-            robot.intake.setPower(0.5);
+            robot.intake.setPower(0.7);
         }
         else{
             robot.intake.setPower(0);
@@ -90,21 +84,42 @@ public class Collection {
      */
     public  void slide(boolean in, boolean out) {
         if(out) {
-            robot.collectionSlide.setPower(1);
-            robot.collectionSlide.setTargetPosition(1220);
+            robot.collectionSlide.setPower(0.7);
+            robot.collectionSlide.setTargetPosition(1000);
+            if(wristDown)
+                wristSetPosition(0.3);
         }
         else if(in) {
-            robot.collectionSlide.setPower(1);
-            if(robot.collectionSlide.getCurrentPosition() > 10) {
-                robot.collectionSlide.setTargetPosition(-1000);
-            }
-            else {
-                robot.collectionSlide.setTargetPosition(-50);
-            }
+            robot.collectionSlide.setPower(0.7);
+            robot.collectionSlide.setTargetPosition(-10);
         }
         else {
-            robot.collectionSlide.setPower(0);
+            robot.collectionSlide.setPower(0.3);
             robot.collectionSlide.setTargetPosition(robot.collectionSlide.getCurrentPosition());
         }
     }
+
+    public void wristSetPosition(double pos) {
+        robot.wristRight.setPosition(pos);
+        robot.wristLeft.setPosition(pos);
+    }
+
+    public boolean stopToggle = false;
+    public void inTakeStop(boolean stop){
+        if(robot.scoringSlide.getCurrentPosition()<10 && robot.collectionSlide.getCurrentPosition()<20 && robot.wristLeft.getPosition()==0.9 && stop)
+            robot.intakeStop.setPosition(0.37);
+        else
+            robot.intakeStop.setPosition(0);
+        /*if(stop && !stopToggle){
+            if(robot.intakeStop.getPosition() == 0)
+                robot.intakeStop.setPosition(0.25);
+            else
+                robot.intakeStop.setPosition(0);
+            stopToggle = true;
+        }
+        else if(!stop && stopToggle) {
+            stopToggle = false;
+        }*/
+    }
+
 }
