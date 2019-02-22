@@ -6,6 +6,10 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -89,121 +93,303 @@ public class CraterAuto extends AutoMethods {
         detector.enable();
 
         //lands the robot and returns what position the gold mineral is in
-        int goldPos = landing(222,robot,detector, driveTrain);
+        int goldPos = landing(40,robot,detector, driveTrain);
+
+        driveTrain.powerSet(1);
+        time.reset();
+        while(time.seconds() < 0.2 && opModeIsActive()){}
 
         //run to forward away from lander to the swing turn
         double power = 0;
         driveTrain.powerSet(power);
-        driveTrain.forwardInch(30);
-        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 300 && opModeIsActive()) {
+        driveTrain.forwardInch(-48);
+        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 200 && opModeIsActive()) {
             telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
             telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
             telemetry.addData("power", power);
             telemetry.update();
-            power += 0.05;
-            driveTrain.powerSet(power);
-        }
-
-        if(power > 1){
-            power=1;
-        }
-
-        //turn for getting to face the crater. SHOULD BE A SMOOTH TRANSITION FROM THE MOVE FORWARD
-        driveTrain.rotate(-160);
-        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 10 && opModeIsActive()) {
-            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
-            telemetry.addData("power", power);
-            telemetry.update();
-            if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<600) {
-                if (power > 0.2)
-                    power -= 0.05;
-                else
-                    power += 0.05;
+            if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<1800) {
+                power -= 0.075;
+                if(power < 0.2)
+                    power = 0.2;
             }
             else {
-                if (power < 1)
+                if (power < 0.6)
                     power += 0.05;
             }
+            power+=0.05;
             driveTrain.powerSet(power);
         }
+        robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
+        robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
+        robot.rightDriveRear.setTargetPosition(robot.rightDriveRear.getCurrentPosition());
+        robot.leftDriveRear.setTargetPosition(robot.leftDriveRear.getCurrentPosition());
+
+        time.reset();
+
+        driveTrain.powerSet(0.5);
+
+        while(time.seconds()<1 && opModeIsActive()){}
+
+        //turn for getting to face the depot
+        runToRotateWait(100,robot,driveTrain);
+
+        robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
+        robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
+        robot.rightDriveRear.setTargetPosition(robot.rightDriveRear.getCurrentPosition());
+        robot.leftDriveRear.setTargetPosition(robot.leftDriveRear.getCurrentPosition());
+
+        time.reset();
+
+        driveTrain.powerSet(1);
+
+        while(time.seconds()<1 && opModeIsActive()){}
+
+        //moves forward to be able to place TM in zone
+        power = 0;
+        driveTrain.powerSet(power);
+        driveTrain.forwardInch(25);
+        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 200 && opModeIsActive()) {
+            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+            telemetry.addData("power", power);
+            telemetry.update();
+            if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<1100) {
+                power -= 0.07;
+                if(power < 0.2)
+                    power = 0.2;
+            }
+            else {
+                if (power < 0.55)
+                    power += 0.05;
+            }
+            power+=0.05;
+            driveTrain.powerSet(power);
+        }
+        robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
+        robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
+        robot.rightDriveRear.setTargetPosition(robot.rightDriveRear.getCurrentPosition());
+        robot.leftDriveRear.setTargetPosition(robot.leftDriveRear.getCurrentPosition());
+
+        time.reset();
+
+        driveTrain.powerSet(0.5);
+
+        while(time.seconds()<1 && opModeIsActive()){}
+
+        collection.wristSetPosition(0.35);
 
         //runs slide out for placing the TM
         robot.collectionSlide.setPower(1);
         robot.collectionSlide.setTargetPosition(1000);
-        //sets wrist down for placing the TM
-        collection.wristSetPosition(0.4);
-
-        //moves forward to be able to place TM in zone
-        driveTrain.forwardInch(7);
-        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 30 && opModeIsActive()) {
-            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
-            telemetry.addData("power", power);
-            telemetry.update();
-            power += 0.05;
-            driveTrain.powerSet(power);
-        }
-
-        while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
-            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
-            telemetry.addData("power", power);
-            telemetry.update();
-        }
-
-        //starts dropping TM
-        time.reset();
-        robot.intake.setPower(0.35);
-        while(time.seconds()<0.15 && opModeIsActive()){}
-        robot.intake.setPower(0);
-
-        //runs slide out for placing the TM
-        robot.collectionSlide.setPower(1);
-        robot.collectionSlide.setTargetPosition(-10);
-        //sets wrist up
-        collection.wristSetPosition(0.9);
-
-        power = 0;
-        //moves forward to be able to place TM in zone
-        driveTrain.forwardInch(-10);
-        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 30 && opModeIsActive()) {
-            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
-            telemetry.addData("power", power);
-            telemetry.update();
-            power += 0.05;
-            driveTrain.powerSet(power);
-        }
 
         while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
             telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
             telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
             telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
-            telemetry.addData("power", power);
             telemetry.update();
         }
 
-        if(power > 1){
-            power=1;
+        //starts dropping TM
+        time.reset();
+        robot.intake.setPower(0.7);
+        while(time.seconds()<0.15 && opModeIsActive()){}
+        robot.intake.setPower(0);
+
+        //runs slide out for placing the TM
+        robot.collectionSlide.setPower(1);
+        robot.collectionSlide.setTargetPosition(0);
+        //sets wrist up
+        collection.wristSetPosition(0.9);
+
+        while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
+            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+            telemetry.update();
         }
 
+        runToForwardWait(-4,robot,driveTrain);
+        robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
+        robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
+        robot.rightDriveRear.setTargetPosition(robot.rightDriveRear.getCurrentPosition());
+        robot.leftDriveRear.setTargetPosition(robot.leftDriveRear.getCurrentPosition());
+        time.reset();
+
+        driveTrain.powerSet(1);
+
+        while(time.seconds()<0.5 && opModeIsActive()){}
+
+        //rotates to drive back to samples
+        runToRotateWait(45,robot,driveTrain);
+
+        robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
+        robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
+        robot.rightDriveRear.setTargetPosition(robot.rightDriveRear.getCurrentPosition());
+        robot.leftDriveRear.setTargetPosition(robot.leftDriveRear.getCurrentPosition());
+        time.reset();
+
+        driveTrain.powerSet(0.1);
+
+        while(time.seconds()<0.5 && opModeIsActive()){}
+
+        power = 0;//drives back to samples
+        driveTrain.forwardInch(-42);
+        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 200 && opModeIsActive()) {
+            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+            telemetry.addData("power", power);
+            telemetry.update();
+            if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<1500) {
+                power -= 0.075;
+                if(power < 0.2)
+                    power = 0.2;
+            }
+            else {
+                if (power < 0.6)
+                    power += 0.05;
+            }
+            power+=0.05;
+            driveTrain.powerSet(power);
+        }
+        robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
+        robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
+        robot.rightDriveRear.setTargetPosition(robot.rightDriveRear.getCurrentPosition());
+        robot.leftDriveRear.setTargetPosition(robot.leftDriveRear.getCurrentPosition());
+
+        time.reset();
+
+        driveTrain.powerSet(0.5);
+
+        while(time.seconds()<1 && opModeIsActive()){}
 
         if(goldPos == 1) {
+            collection.wristSetPosition(collection.wristDownPos);
+            runToRotateWait(68,robot,driveTrain);
+            robot.intake.setPower(-1);
+
+            robot.collectionSlide.setTargetPosition(550);
+            while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.update();
+            }
+
+            collection.wristSetPosition(0.9);
+            robot.collectionSlide.setTargetPosition(0);
+            while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.update();
+            }
+
+            time.reset();
+            while (time.seconds()<0.2 && opModeIsActive()){}
 
         }
         else if(goldPos == 2) {
+            runToRotateWait(120,robot,driveTrain);
 
+            collection.wristSetPosition(collection.wristDownPos);
+            time.reset();
+            while(time.seconds()<1 && opModeIsActive()){}
+
+            robot.intake.setPower(-1);
+
+            robot.collectionSlide.setTargetPosition(450);
+            while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.update();
+            }
+
+            collection.wristSetPosition(0.9);
+            robot.collectionSlide.setTargetPosition(0);
+            while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.update();
+            }
+
+            time.reset();
+            while (time.seconds()<0.2 && opModeIsActive()){}
         }
         else {
+            runToRotateWait(150,robot,driveTrain);
 
+            collection.wristSetPosition(collection.wristDownPos+0.02);
+            time.reset();
+            while(time.seconds()<1 && opModeIsActive()){}
+            robot.intake.setPower(-1);
+
+            robot.collectionSlide.setTargetPosition(900);
+            while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.update();
+            }
+
+            collection.wristSetPosition(0.9);
+            robot.collectionSlide.setTargetPosition(0);
+            while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.update();
+            }
+
+            time.reset();
+            while (time.seconds()<0.2 && opModeIsActive()){}
         }
 
-        while (opModeIsActive()){}
+        robot.intakeStop.setPosition(0.35);
+        robot.intake.setPower(-1);
+        time.reset();
+        while(time.seconds()<1 && opModeIsActive()){}
+        robot.intakeStop.setPosition(0);
+        robot.intake.setPower(0);
+
+        robot.scoringSlide.setPower(1);
+        robot.scoringSlide.setTargetPosition(950);
+
+        power = 0;
+        int rDegrees = 815;
+
+        robot.leftDriveFront.setTargetPosition(rDegrees);
+        robot.leftDriveRear.setTargetPosition(rDegrees);
+        robot.rightDriveFront.setTargetPosition(-rDegrees);
+        robot.rightDriveRear.setTargetPosition(-rDegrees);
+        driveTrain.powerSet(power);
+        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
+            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+            telemetry.addData("power", power);
+            telemetry.update();
+            power += 0.05;
+            driveTrain.powerSet(power);
+        }
+
+        runToForwardWait(-19,robot,driveTrain);
+        robot.scoringStop.setPosition(0.5);
+        time.reset();
+        while(time.seconds()<0.5 && opModeIsActive()){}
+
+        runToForwardWait(22,robot,driveTrain);
+        robot.scoringSlide.setTargetPosition(0);
+
+        robot.collectionSlide.setTargetPosition(700);
+        while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 30 && opModeIsActive()) {
+            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+            telemetry.update();
+        }
+        collection.wristSetPosition(0.4);
     }
 }

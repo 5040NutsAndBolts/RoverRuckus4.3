@@ -23,10 +23,10 @@ public class LiftMechanism {
         if(toggle && !liftToggle) {
             liftToggle = true;
 
-            if(robot.hang.getTargetPosition() == 20)
-                robot.hang.setTargetPosition(3100);
+            if(robot.hang.getTargetPosition() == 0)
+                robot.hang.setTargetPosition(3050);
             else {
-                robot.hang.setTargetPosition(20);
+                robot.hang.setTargetPosition(0);
             }
         }
         else if(!toggle) {
@@ -34,8 +34,7 @@ public class LiftMechanism {
         }
 
         //if the slide is down and it is supposed to be down or vice versa for up then it sets the power to 0
-        if(robot.hang.getCurrentPosition() >= robot.hang.getTargetPosition()-50 &&
-                        robot.hang.getCurrentPosition() <= robot.hang.getTargetPosition()+50) {
+        if(Math.abs(robot.hang.getCurrentPosition() - robot.hang.getTargetPosition()) < 20) {
             robot.hang.setPower(0);
         }
         else {
@@ -54,7 +53,7 @@ public class LiftMechanism {
             robot.hang.setPower(0);
             robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.hang.setTargetPosition(20);
+            robot.hang.setTargetPosition(0);
             downReset = false;
         }
     }

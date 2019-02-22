@@ -66,7 +66,7 @@ class AutoMethods extends LinearOpMode {
             telemetry.addData("power", power);
             telemetry.update();
             if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<400) {
-                if (power > 0.4)
+                if (power > 0.25)
                     power -= 0.05;
                 else
                     power += 0.05;

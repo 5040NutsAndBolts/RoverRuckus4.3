@@ -5,6 +5,7 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -27,7 +28,21 @@ public class Teleop extends OpMode {
     private LiftMechanism lifter;
     private Collection collection;
 
-    private boolean changeAdjust = false;
+    private Thread t1 = new Thread(){
+        public void run() {
+            while(!t1.isInterrupted()) {
+                robot.wristRight.setPosition(collection.wristPos);
+            }
+        }
+    };
+
+    private Thread t2 = new Thread(){
+        public void run() {
+            while(!t2.isInterrupted()) {
+                robot.wristLeft.setPosition(collection.wristPos);
+            }
+        }
+    };
 
     /**
      * sets up the objects for the other classes
@@ -45,7 +60,7 @@ public class Teleop extends OpMode {
      * init's the hardware of the robot
      */
     public void init() {
-        robot.init(hardwareMap,false);
+        robot.init(hardwareMap,true);
         //gyro setup
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -76,26 +91,31 @@ public class Teleop extends OpMode {
      */
     @Override
     public void start() {
-            // creates a new reference for the file and parses the line to a double
-            //      Will fix later if the exportData will always be a double
-            try {
-                robot.exportData = new FileHelper();
-            } catch (IOException e) { }
-            try {
-                driveTrain.adjust = Double.parseDouble(robot.exportData.readFromFile());
-                robot.exportData.clearFile();
-                //writeToFile(robot);
-            } catch (Exception e) {
-                driveTrain.adjust = 0;
-                robot.resetMotors();
-            }
-            robot.scoringStop.setPosition(0);
+        // creates a new reference for the file and parses the line to a double
+        //      Will fix later if the exportData will always be a double
+        try {
+            robot.exportData = new FileHelper();
+        } catch (IOException e) { }
+        try {
+            driveTrain.adjust = Double.parseDouble(robot.exportData.readFromFile());
+            robot.exportData.clearFile();
+            //writeToFile(robot);
+        } catch (Exception e) {
+            driveTrain.adjust = 0;
+            robot.resetMotors();
+        }robot.scoringStop.setPosition(0);
+
+        //starts the threads runs run()
+        t1.start();
+        t2.start();
     }
 
     /**
      * loops while in the play phase
      */
     public void loop() {
+        //t1.run();
+        //t2.run();
         //inputs for controller 1
         double leftStickY1 = gamepad1.left_stick_y;
         double leftStickX1 = gamepad1.left_stick_x;
@@ -124,12 +144,14 @@ public class Teleop extends OpMode {
 
         //the collection method calls
         collection.wrist(leftTrigger2);
-        collection.inTake(leftBumper2, rightBumper2);
+        collection.inTake(leftBumper2, y2
+
+        );
         collection.slide(rightBumper1, leftBumper1);
-        collection.inTakeStop(gamepad2.y);
+        collection.inTakeStop(rightBumper2);
 
         //the lift call
-        lifter.lift(leftTrigger1, dPadDown1);
+        lifter.lift(leftTrigger1, gamepad1.right_trigger > 0.3);
 
             if(dPadLeft1) {
                 leftStickX1 = -0.4;

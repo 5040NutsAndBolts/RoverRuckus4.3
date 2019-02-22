@@ -91,6 +91,17 @@ public class DepotAuto extends AutoMethods {
         //lands the robot and returns what position the gold mineral is in
         int goldPos = landing(285,robot,detector, driveTrain);
 
+        robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
+        robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
+        robot.rightDriveRear.setTargetPosition(robot.rightDriveRear.getCurrentPosition());
+        robot.leftDriveRear.setTargetPosition(robot.leftDriveRear.getCurrentPosition());
+
+        time.reset();
+
+        driveTrain.powerSet(0.5);
+
+        while(time.seconds()<1 && opModeIsActive()){}
+
         //run to forward for dropping team marker
         double power = 0;
         driveTrain.powerSet(power);
@@ -133,7 +144,7 @@ public class DepotAuto extends AutoMethods {
 
         //starts dropping TM
         time.reset();
-        robot.intake.setPower(0.4);
+        robot.intake.setPower(0.7);
         while(time.seconds()<0.15 && opModeIsActive()){}
         robot.collectionSlide.setTargetPosition(0);
         while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
@@ -150,10 +161,10 @@ public class DepotAuto extends AutoMethods {
 
         if(goldPos == 1) {
             //turns to face the gold mineral
-            runToRotateWait(-47,robot,driveTrain);
+            runToRotateWait(-46,robot,driveTrain);
 
             //sets wrist down to pick up gold mineral
-            collection.wristSetPosition(0.255);
+            collection.wristSetPosition(collection.wristDownPos);
             time.reset();
             while(time.seconds() < 0.2 && opModeIsActive()){}
             robot.intake.setPower(-1);
@@ -184,7 +195,7 @@ public class DepotAuto extends AutoMethods {
         else if(goldPos == 2) {
             runToForwardWait(-5,robot,driveTrain);
 
-            collection.wristSetPosition(0.255);
+            collection.wristSetPosition(collection.wristDownPos);
             time.reset();
             while(time.seconds() < 0.2 && opModeIsActive()){}
             robot.intake.setPower(-1);
@@ -199,10 +210,10 @@ public class DepotAuto extends AutoMethods {
         }
         else {
             //turns to face the gold mineral
-            runToRotateWait(43,robot,driveTrain);
+            runToRotateWait(46,robot,driveTrain);
 
             //sets wrist down to pick up gold mineral
-            collection.wristSetPosition(0.255);
+            collection.wristSetPosition(collection.wristDownPos);
             time.reset();
             while(time.seconds() < 0.2 && opModeIsActive()){}
             robot.intake.setPower(-1);

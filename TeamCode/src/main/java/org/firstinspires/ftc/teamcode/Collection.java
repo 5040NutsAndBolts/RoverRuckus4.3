@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Class for the collection Mechanism code
@@ -11,13 +12,19 @@ public class Collection {
 
     private boolean wristReset = false;
     private boolean wristToggle = false;   //toggle for the wrist
-    private boolean wristDown = false;      //when true and slide is out the wrist will be down
+    public boolean wristDown = false;      //when true and slide is out the wrist will be down
+    public double wristDownPos = 0.2;
+    public ElapsedTime time = new ElapsedTime();
+    public double wristPos = 0.75;
+
 
     /**
      * sets up the hardware so you don't have to pass it as a parameter
      * @param r - Hardware reference that needs to get passed through
      */
     public Collection(Hardware r) {
+        //t1.start();
+        //t2.start();
         robot = r;
     }
 
@@ -26,24 +33,23 @@ public class Collection {
      * @param toggle - when true it will move it up if down or vice-versa
      */
 
-    public double wristPosition=0;
 
     public void wrist(boolean toggle)
     {
 
-        robot.wristRight.setPosition(wristPosition);
-        robot.wristLeft.setPosition(wristPosition);
+        wristSetPosition(wristPos);
         if(!wristDown){
 
-            wristPosition=0.9;
+            wristPos=0.75;
 
         }else {
-
-            wristPosition=0.25+(.00004*robot.collectionSlide.getCurrentPosition());
+            robot.scoringSlide.setTargetPosition(0);
+            wristPos=wristDownPos+(.00004*robot.collectionSlide.getCurrentPosition());
 
         }
         if(toggle && !wristToggle)
         {
+            time.reset();
             wristToggle = true;
 
             if(wristDown)
@@ -60,17 +66,24 @@ public class Collection {
         }
     }
 
+    public void wristSetPosition(double pos) {
+        wristPos = pos;
+    }
+
     /**
      * spins the intake vex motor either in or out
      * @param in - when true will pull in minerals
      * @param out - when true will spit out minerals
      */
     public void inTake(boolean in, boolean out) {
-        if(in || robot.intakeStop.getPosition()==0.37) {
-            robot.intake.setPower(-1);
+        if(robot.intakeStop.getPosition()==0.37) {
+            robot.intake.setPower(-0.8);
         }
         else if(out) {
             robot.intake.setPower(0.7);
+        }
+        else if(in || wristDown) {
+            robot.intake.setPower(-1);
         }
         else{
             robot.intake.setPower(0);
@@ -99,14 +112,9 @@ public class Collection {
         }
     }
 
-    public void wristSetPosition(double pos) {
-        robot.wristRight.setPosition(pos);
-        robot.wristLeft.setPosition(pos);
-    }
-
     public boolean stopToggle = false;
     public void inTakeStop(boolean stop){
-        if(robot.scoringSlide.getCurrentPosition()<10 && robot.collectionSlide.getCurrentPosition()<20 && robot.wristLeft.getPosition()==0.9 && stop)
+        if(robot.scoringSlide.getCurrentPosition()<10 && robot.collectionSlide.getCurrentPosition()<20 && !wristDown && stop)
             robot.intakeStop.setPosition(0.37);
         else
             robot.intakeStop.setPosition(0);

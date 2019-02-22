@@ -64,9 +64,9 @@ public class MecanumDrive {
             adjust = angles.firstAngle;
         }
         if(robot.collectionSlide.getCurrentPosition() > 60) {
-            rotation /= 2;
+            rotation /= 2.5;
         } else {
-            rotation /= 1.5;
+            rotation /= 2;
         }
 
         /*if(!stop && forward==0 && sideways==0 && rotation==0){
