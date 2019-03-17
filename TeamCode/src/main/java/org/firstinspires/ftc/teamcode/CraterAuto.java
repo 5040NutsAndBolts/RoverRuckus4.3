@@ -26,6 +26,22 @@ public class CraterAuto extends AutoMethods {
     private GoldAlignDetector detector;
     private String driverSpot = "Crater";
 
+    private Thread t1 = new Thread(){
+        public void run() {
+            while(!t1.isInterrupted()) {
+                robot.wristRight.setPosition(collection.wristPos);
+            }
+        }
+    };
+
+    private Thread t2 = new Thread(){
+        public void run() {
+            while(!t2.isInterrupted()) {
+                robot.wristLeft.setPosition(collection.wristPos);
+            }
+        }
+    };
+
     /**
      * The method that gets run when you hit init
      */
@@ -58,9 +74,12 @@ public class CraterAuto extends AutoMethods {
         robot.hang.setTargetPosition(0);
         robot.hang.setPower(1);
 
-        collection.wristSetPosition(1);
+        collection.wristSetPosition(0.75);
         robot.scoringStop.setPosition(0);
         robot.intakeStop.setPosition(0);
+
+        t1.start();
+        t2.start();
 
         //moves the teamMarker servo to starting position
         //robot.teamMarker.setPosition(0);
@@ -391,5 +410,9 @@ public class CraterAuto extends AutoMethods {
             telemetry.update();
         }
         collection.wristSetPosition(0.4);
+        time.reset();
+        while(time.seconds() < 0.5){}
+        t1.interrupt();
+        t2.interrupt();
     }
 }

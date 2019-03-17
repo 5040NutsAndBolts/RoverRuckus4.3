@@ -51,7 +51,6 @@ public class Teleop extends OpMode {
         robot = new Hardware();
         driveTrain = new MecanumDrive(robot);
         lifter = new LiftMechanism(robot);
-        collection = new Collection(robot);
         mineralScorer = new MineralScorer(robot);
     }
 
@@ -60,7 +59,7 @@ public class Teleop extends OpMode {
      * init's the hardware of the robot
      */
     public void init() {
-        robot.init(hardwareMap,true);
+        robot.init(hardwareMap,false);
         //gyro setup
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -91,6 +90,7 @@ public class Teleop extends OpMode {
      */
     @Override
     public void start() {
+        collection = new Collection(robot);
         // creates a new reference for the file and parses the line to a double
         //      Will fix later if the exportData will always be a double
         try {
@@ -102,7 +102,7 @@ public class Teleop extends OpMode {
             //writeToFile(robot);
         } catch (Exception e) {
             driveTrain.adjust = 0;
-            robot.resetMotors();
+            //robot.resetMotors();
         }robot.scoringStop.setPosition(0);
 
         //starts the threads runs run()
@@ -198,5 +198,10 @@ public class Teleop extends OpMode {
         telemetry.addData("right Trigger 2",rightTrigger2);
         telemetry.addData("scoring bar position", robot.scoringStop.getPosition());
         telemetry.update();
+    }
+
+    public void stop() {
+        t1.interrupt();
+        t2.interrupt();
     }
 }

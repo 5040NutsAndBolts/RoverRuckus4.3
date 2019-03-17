@@ -13,9 +13,25 @@ public class Collection {
     private boolean wristReset = false;
     private boolean wristToggle = false;   //toggle for the wrist
     public boolean wristDown = false;      //when true and slide is out the wrist will be down
-    public double wristDownPos = 0.2;
+    public double wristDownPos = 0.28;
     public ElapsedTime time = new ElapsedTime();
-    public double wristPos = 0.75;
+    public double wristPos = 0.85;
+
+    /*private Thread t1 = new Thread(){
+        public void run() {
+            while(!t1.isInterrupted()) {
+                robot.wristRight.setPosition(wristPos);
+            }
+        }
+    };
+
+    private Thread t2 = new Thread(){
+        public void run() {
+            while(!t2.isInterrupted()) {
+                robot.wristLeft.setPosition(wristPos);
+            }
+        }
+    };*/
 
 
     /**
@@ -40,7 +56,7 @@ public class Collection {
         wristSetPosition(wristPos);
         if(!wristDown){
 
-            wristPos=0.75;
+            wristPos=0.85;
 
         }else {
             robot.scoringSlide.setTargetPosition(0);
@@ -97,13 +113,14 @@ public class Collection {
      */
     public  void slide(boolean in, boolean out) {
         if(out) {
-            robot.collectionSlide.setPower(0.7);
-            robot.collectionSlide.setTargetPosition(1000);
-            if(wristDown)
-                wristSetPosition(0.3);
+            robot.collectionSlide.setPower(0.6);
+            robot.collectionSlide.setTargetPosition(1100);
+            //if(wristDown)
+               // wristSetPosition(0.3);
         }
+        //spitz gay
         else if(in) {
-            robot.collectionSlide.setPower(0.7);
+            robot.collectionSlide.setPower(0.6);
             robot.collectionSlide.setTargetPosition(-10);
         }
         else {

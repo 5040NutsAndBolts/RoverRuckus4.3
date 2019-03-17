@@ -142,9 +142,9 @@ class AutoMethods extends LinearOpMode {
     public int landing(int rotate,Hardware robot, GoldAlignDetector detector, MecanumDrive driveTrain) {
         int goldPos = 3;
         //lowers hang mechanism
-        robot.hang.setTargetPosition(3000);
+        robot.hang.setTargetPosition(3250);
         robot.hang.setPower(1);
-        while(opModeIsActive() && robot.hang.getCurrentPosition() < 2950) {
+        while(opModeIsActive() && robot.hang.getCurrentPosition() < 3200) {
             //scans for gold mineral spot
             if(robot.hang.getCurrentPosition() < 2000) {
                 if (detector.getYPosition() > 300) {

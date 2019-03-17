@@ -22,6 +22,23 @@ public class DepotAuto extends AutoMethods {
     private GoldAlignDetector detector;
     private String driverSpot = "Crater";
 
+    private Thread t1 = new Thread(){
+        public void run() {
+            while(!t1.isInterrupted()) {
+                robot.wristRight.setPosition(collection.wristPos);
+            }
+        }
+    };
+
+    private Thread t2 = new Thread(){
+        public void run() {
+            while(!t2.isInterrupted()) {
+                robot.wristLeft.setPosition(collection.wristPos);
+            }
+        }
+    };
+
+
     /**
      * The method that gets run when you hit init
      */
@@ -54,9 +71,12 @@ public class DepotAuto extends AutoMethods {
         robot.hang.setTargetPosition(0);
         robot.hang.setPower(1);
 
-        collection.wristSetPosition(1);
+        collection.wristSetPosition(0.75);
         robot.scoringStop.setPosition(0);
         robot.intakeStop.setPosition(0);
+
+        t1.start();
+        t2.start();
 
         //moves the teamMarker servo to starting position
         //robot.teamMarker.setPosition(0);
@@ -143,9 +163,17 @@ public class DepotAuto extends AutoMethods {
         }
 
         //starts dropping TM
+        collection.wristPos = collection.wristDownPos;
         time.reset();
-        robot.intake.setPower(0.7);
+        while(time.seconds()<0.5){}
+        time.reset();
+        robot.intake.setPower(0.65);
         while(time.seconds()<0.15 && opModeIsActive()){}
+
+        collection.wristPos = 0.4;
+        time.reset();
+        while(time.seconds()<0.5){}
+
         robot.collectionSlide.setTargetPosition(0);
         while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
                 robot.intake.setPower(0);
@@ -270,7 +298,36 @@ public class DepotAuto extends AutoMethods {
         robot.scoringStop.setPosition(0.5);
         time.reset();
         while(time.seconds()<0.5 && opModeIsActive()){}
-        runToForwardWait(17,robot,driveTrain);
+        power = 0;
+        driveTrain.powerSet(power);
+        driveTrain.forwardInch(21);
+        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 200 && opModeIsActive()) {
+            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+            telemetry.addData("power", power);
+            telemetry.update();
+            if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<1100) {
+                power -= 0.07;
+                if(power < 0.2)
+                    power = 0.2;
+            }
+            else {
+                if (power < 0.55)
+                    power += 0.05;
+            }
+            power+=0.05;
+            driveTrain.powerSet(power);
+        }
+        robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
+        robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
+        robot.rightDriveRear.setTargetPosition(robot.rightDriveRear.getCurrentPosition());
+        robot.leftDriveRear.setTargetPosition(robot.leftDriveRear.getCurrentPosition());
+
+        time.reset();
+
+        driveTrain.powerSet(0.5);
+
+        while(time.seconds()<0.5 && opModeIsActive()){}
 
         robot.scoringStop.setPosition(0);
         robot.scoringSlide.setTargetPosition(0);
@@ -282,5 +339,9 @@ public class DepotAuto extends AutoMethods {
         runToSidewaysWait(-10,robot,driveTrain);
         runToForwardWait(15,robot,driveTrain);
         collection.wristSetPosition(0.4);
+        time.reset();
+        while(time.seconds() < 0.5){}
+        t1.interrupt();
+        t2.interrupt();
     }
 }
