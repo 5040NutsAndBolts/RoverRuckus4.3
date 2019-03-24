@@ -30,6 +30,7 @@ public class MineralScorer {
 
             if(robot.scoringSlide.getTargetPosition()==0) {
                 robot.scoringSlide.setTargetPosition(950);
+                collection.collect = false;
             }
             else {
                 robot.scoringSlide.setTargetPosition(0);
@@ -38,11 +39,6 @@ public class MineralScorer {
         else if(!toggle) {
             scoringToggle = false;
         }
-        if(collection.wristDown);
-            //robot.scoringSlide.setTargetPosition(0);
-        //if the scoring slide motor is down and it is supposed to be down it sets the power to 0
-        //if(robot.scoringSlide.getCurrentPosition() <= 20 && robot.scoringSlide.getTargetPosition() == 0) {
-         //   robot.scoringSlide.setPower(0.3);
         if(abs(robot.scoringSlide.getCurrentPosition()-robot.scoringSlide.getTargetPosition()) < 50) {
             slidePower=0.5;
         }

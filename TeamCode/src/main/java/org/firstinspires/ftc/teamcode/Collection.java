@@ -12,26 +12,10 @@ public class Collection {
 
     private boolean wristReset = false;
     private boolean wristToggle = false;   //toggle for the wrist
-    public boolean wristDown = false;      //when true and slide is out the wrist will be down
-    public double wristDownPos = 0.28;
-    public ElapsedTime time = new ElapsedTime();
-    public double wristPos = 0.85;
-
-    /*private Thread t1 = new Thread(){
-        public void run() {
-            while(!t1.isInterrupted()) {
-                robot.wristRight.setPosition(wristPos);
-            }
-        }
-    };
-
-    private Thread t2 = new Thread(){
-        public void run() {
-            while(!t2.isInterrupted()) {
-                robot.wristLeft.setPosition(wristPos);
-            }
-        }
-    };*/
+    public boolean collect = false;
+    public double wristDownPos = 0.25;
+    public double wristUpPos = 1;
+    public double wristPos = 0.80;
 
 
     /**
@@ -39,8 +23,6 @@ public class Collection {
      * @param r - Hardware reference that needs to get passed through
      */
     public Collection(Hardware r) {
-        //t1.start();
-        //t2.start();
         robot = r;
     }
 
@@ -54,30 +36,24 @@ public class Collection {
     {
 
         wristSetPosition(wristPos);
-        if(!wristDown){
-
-            wristPos=0.85;
-
-        }else {
-            robot.scoringSlide.setTargetPosition(0);
-            wristPos=wristDownPos+(.00004*robot.collectionSlide.getCurrentPosition());
-
+        if(robot.collectionSlide.getCurrentPosition() > 650) {
+            wristPos=wristDownPos;
+            collect = true;
         }
-        if(toggle && !wristToggle)
-        {
-            time.reset();
+        else if(toggle && !wristToggle) {
             wristToggle = true;
 
-            if(wristDown)
+            if(robot.wristLeft.getPosition() == wristDownPos)
             {
-                wristDown = false;
+                wristPos=wristUpPos;
             }
             else {
-                wristDown = true;
+                robot.scoringSlide.setTargetPosition(0);
+                wristPos=wristDownPos;
+                collect = true;
             }
         }
-        else if(!toggle && wristToggle)
-        {
+        else if(!toggle && wristToggle) {
             wristToggle = false;
         }
     }
@@ -92,17 +68,20 @@ public class Collection {
      * @param out - when true will spit out minerals
      */
     public void inTake(boolean in, boolean out) {
-        if(robot.intakeStop.getPosition()==0.37) {
-            robot.intake.setPower(-0.8);
-        }
-        else if(out) {
+        if(out) {
             robot.intake.setPower(0.7);
         }
-        else if(in || wristDown) {
+        else if(robot.intakeStop.getPosition() == 0.37){
+            robot.intake.setPower(-0.8);
+        }
+        else if(collect) {
             robot.intake.setPower(-1);
         }
         else{
             robot.intake.setPower(0);
+        }
+        if(robot.hang.getCurrentPosition() > 50) {
+            collect = false;
         }
     }
 
@@ -113,38 +92,30 @@ public class Collection {
      */
     public  void slide(boolean in, boolean out) {
         if(out) {
-            robot.collectionSlide.setPower(0.6);
+            robot.collectionSlide.setPower(0.5);
             robot.collectionSlide.setTargetPosition(1100);
             //if(wristDown)
                // wristSetPosition(0.3);
         }
-        //spitz gay
         else if(in) {
-            robot.collectionSlide.setPower(0.6);
+            robot.collectionSlide.setPower(0.5);
             robot.collectionSlide.setTargetPosition(-10);
         }
         else {
-            robot.collectionSlide.setPower(0.3);
+            robot.collectionSlide.setPower(0.8);
             robot.collectionSlide.setTargetPosition(robot.collectionSlide.getCurrentPosition());
         }
     }
 
-    public boolean stopToggle = false;
     public void inTakeStop(boolean stop){
-        if(robot.scoringSlide.getCurrentPosition()<10 && robot.collectionSlide.getCurrentPosition()<20 && !wristDown && stop)
+        if(robot.scoringSlide.getCurrentPosition()<10 && robot.collectionSlide.getCurrentPosition()<20 &&
+                (robot.wristLeft.getPosition() == wristUpPos) && stop) {
             robot.intakeStop.setPosition(0.37);
-        else
-            robot.intakeStop.setPosition(0);
-        /*if(stop && !stopToggle){
-            if(robot.intakeStop.getPosition() == 0)
-                robot.intakeStop.setPosition(0.25);
-            else
-                robot.intakeStop.setPosition(0);
-            stopToggle = true;
+            collect = false;
+            slide(true,false);
         }
-        else if(!stop && stopToggle) {
-            stopToggle = false;
-        }*/
+        else
+            robot.intakeStop.setPosition(0.02);
     }
 
 }

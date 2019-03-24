@@ -78,8 +78,6 @@ public class DepotAuto extends AutoMethods {
         t1.start();
         t2.start();
 
-        //moves the teamMarker servo to starting position
-        //robot.teamMarker.setPosition(0);
 
         //sets up the detector for mineral detection
         detector = new GoldAlignDetector();
@@ -150,8 +148,8 @@ public class DepotAuto extends AutoMethods {
 
             if(robot.rightDriveFront.getCurrentPosition() > 200){
                 //runs slide out for placing the TM
-                robot.collectionSlide.setPower(1);
-                robot.collectionSlide.setTargetPosition(1000);
+                robot.collectionSlide.setPower(0.6);
+                robot.collectionSlide.setTargetPosition(550);
             }
         }
         while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
@@ -184,7 +182,7 @@ public class DepotAuto extends AutoMethods {
             telemetry.update();
         }
 
-        robot.collectionSlide.setPower(1);
+        robot.collectionSlide.setPower(0.6);
         robot.collectionSlide.setTargetPosition(-10);
 
         if(goldPos == 1) {
@@ -192,11 +190,11 @@ public class DepotAuto extends AutoMethods {
             runToRotateWait(-46,robot,driveTrain);
 
             //sets wrist down to pick up gold mineral
-            collection.wristSetPosition(collection.wristDownPos);
+            collection.wristPos = collection.wristDownPos;
             time.reset();
             while(time.seconds() < 0.2 && opModeIsActive()){}
             robot.intake.setPower(-1);
-            robot.collectionSlide.setTargetPosition(400);
+            robot.collectionSlide.setTargetPosition(300);
             while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
                 telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
                 telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -205,10 +203,10 @@ public class DepotAuto extends AutoMethods {
                 telemetry.update();
             }
 
-            collection.wristSetPosition(1);
+            collection.wristSetPosition(0.6);
             time.reset();
             //pulls slide back in
-            robot.collectionSlide.setTargetPosition(0);
+            robot.collectionSlide.setTargetPosition(-20);
             while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
                 telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
                 telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -245,7 +243,7 @@ public class DepotAuto extends AutoMethods {
             time.reset();
             while(time.seconds() < 0.2 && opModeIsActive()){}
             robot.intake.setPower(-1);
-            robot.collectionSlide.setTargetPosition(400);
+            robot.collectionSlide.setTargetPosition(300);
             while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
                 telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
                 telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -277,7 +275,7 @@ public class DepotAuto extends AutoMethods {
         robot.intake.setPower(0);
 
         robot.scoringSlide.setPower(1);
-        robot.scoringSlide.setTargetPosition(1000);
+        robot.scoringSlide.setTargetPosition(950);
 
         while(Math.abs(robot.scoringSlide.getTargetPosition()-robot.scoringSlide.getCurrentPosition()) > 10 && opModeIsActive()) { }
 
