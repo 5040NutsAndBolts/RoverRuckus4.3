@@ -23,6 +23,8 @@ public class Teleop extends OpMode {
     private LiftMechanism lifter;
     private Collection collection;
 
+    private Controllers controllers = new Controllers();
+
     /**
      * sets up the objects for the other classes
      */
@@ -42,11 +44,11 @@ public class Teleop extends OpMode {
         robot.init(hardwareMap);
         //gyro setup
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit            = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile  = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled       = true;
+        parameters.loggingTag           = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -77,56 +79,41 @@ public class Teleop extends OpMode {
      * loops while in the play phase
      */
     public void loop() {
-        //inputs for controller 1
-        double leftStickY1 = gamepad1.left_stick_y;
-        double leftStickX1 = gamepad1.left_stick_x;
-        double rightStickX1 = gamepad1.right_stick_x;
-        boolean leftBumper1 = gamepad1.left_bumper;
-        boolean rightBumper1 = gamepad1.right_bumper;
-        boolean dPadDown1 = gamepad1.dpad_down;
-        boolean dPadRight1 = gamepad1.dpad_right;
-        boolean dPadLeft1 = gamepad1.dpad_left;
-        boolean x1 = gamepad1.x;
-        boolean leftTrigger1 = gamepad1.left_trigger > 0.3;
 
-        //controller 2 input
-        boolean leftBumper2 = gamepad2.left_bumper;
-        boolean rightBumper2 = gamepad2.right_bumper;
-        boolean x2 = gamepad2.x;
-        boolean y2 = gamepad2.y;
-        boolean rightTrigger2 = gamepad2.right_trigger > 0.3;
-        boolean leftTrigger2 = gamepad2.left_trigger > 0.3;
-        double leftStickY2 = gamepad2.left_stick_y;
+        double rightStickX1 = controllers.right_stick_x1;
+        double leftStickX1  = controllers.left_stick_x1;
+        double leftStickY1  = controllers.left_stick_y1;
+
+        controllers.update(gamepad1, gamepad2);
 
         //the scoring method calls
-        mineralScorer.slide(x2);
-        mineralScorer.mineralBar(rightTrigger2);
-        mineralScorer.bop(y2);
+        mineralScorer.slide(controllers.x_button2);
+        mineralScorer.mineralBar(controllers.right_trigger2);
+        mineralScorer.bop(controllers.y_button2);
 
         //the collection method calls
-        collection.wrist(leftTrigger2);
-        collection.inTake(rightBumper2, leftBumper2);
-        collection.slide(rightBumper1, leftBumper1);
+        collection.wrist(controllers.left_trigger2);
+        collection.inTake(controllers.right_bumper2, controllers.left_bumper2);
+        collection.slide(controllers.right_bumper1, controllers.left_bumper1);
 
         //the lift call
-        lifter.lift(leftTrigger1, dPadDown1);
+        lifter.lift(controllers.left_trigger1, controllers.ddown1);
 
         //slows down the driving when the scoring slide is up
         if(robot.scoringSlide.getCurrentPosition() > 200) {
             rightStickX1 /= 2;
-            leftStickX1 /= 2;
-            leftStickY1 /= 2;
+            leftStickX1  /= 2;
+            leftStickY1  /= 2;
         }
 
         if(rightStickX1 == 0) {
-            if(dPadLeft1) {
+            if(controllers.dleft1) {
                 rightStickX1 = -0.3;
-            }
-            else if(dPadRight1) {
+            } else if(controllers.dright1) {
                 rightStickX1 = 0.3;
             }
         }
-        driveTrain.orientedDrive(leftStickY1, leftStickX1, rightStickX1,x1);
+        driveTrain.orientedDrive(leftStickY1, leftStickX1, rightStickX1, controllers.x_button1);
 
 
         //telemetry lines
