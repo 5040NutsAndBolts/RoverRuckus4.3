@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 /**
  * Class for the collection Mechanism code
  */
@@ -9,6 +11,7 @@ public class Collection {
 
     private boolean wristToggle = false;   //toggle for the wrist
     private boolean wristDown = true;      //when true and slide is out the wrist will be down
+    private boolean resetToggle = false;
 
     /**
      * sets up the hardware so you don't have to pass it as a parameter
@@ -101,6 +104,25 @@ public class Collection {
         else {
             robot.collectionSlide.setPower(0);
             robot.collectionSlide.setTargetPosition(robot.collectionSlide.getCurrentPosition());
+        }
+    }
+
+    /**
+     * method for resetting the slide back in
+     * @param resetting - when true it will start moving slide in
+     */
+    public void reset(boolean resetting) {
+        if(resetting){
+            resetToggle = true;
+            robot.collectionSlide.setPower(.5);
+            robot.collectionSlide.setTargetPosition(-7000);
+        }
+        else if (resetToggle) {
+            resetToggle = false;
+            robot.collectionSlide.setPower(0);
+            robot.collectionSlide.setTargetPosition(robot.scoringSlide.getCurrentPosition());
+            robot.collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 }

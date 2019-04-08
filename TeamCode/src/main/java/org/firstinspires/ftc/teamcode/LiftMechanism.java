@@ -58,4 +58,20 @@ public class LiftMechanism {
             downReset = false;
         }
     }
+
+    /**
+     * method for resetting the lift back to the bottom
+     * @param resetting - when true it will start moving lift down
+     */
+    public void reset(boolean resetting){
+        if(resetting){
+            robot.hangingMotor.setPower(1);
+            robot.hangingMotor.setTargetPosition(-7000);
+        }
+        else {
+            robot.hangingMotor.setPower(0);
+            robot.hangingMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.hangingMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+    }
 }

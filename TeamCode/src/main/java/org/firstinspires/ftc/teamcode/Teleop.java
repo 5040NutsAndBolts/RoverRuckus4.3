@@ -90,14 +90,17 @@ public class Teleop extends OpMode {
         mineralScorer.slide(controllers.x_button2);
         mineralScorer.mineralBar(controllers.right_trigger2);
         mineralScorer.bop(controllers.y_button2);
+        mineralScorer.reset(controllers.y_button3);
 
         //the collection method calls
         collection.wrist(controllers.left_trigger2);
         collection.inTake(controllers.right_bumper2, controllers.left_bumper2);
         collection.slide(controllers.right_bumper1, controllers.left_bumper1);
+        collection.reset(controllers.left_bumper3);
 
         //the lift call
         lifter.lift(controllers.left_trigger1, controllers.ddown1);
+        lifter.reset(controllers.right_bumper3);
 
         //slows down the driving when the scoring slide is up
         if(robot.scoringSlide.getCurrentPosition() > 200) {
