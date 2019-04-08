@@ -22,6 +22,8 @@ public class Hardware {
 
     HardwareMap hwMap;
 
+    public Servo sampleArm = null;
+
     //scoring mechanism
     public DcMotor scoringSlide = null;
     public Servo scoringStop = null;
@@ -41,6 +43,7 @@ public class Hardware {
     public Servo wristLeft = null;
     public Servo wristRight = null;
     public Servo intakeStop = null;
+    public ColorSensor intakeDetector = null;
 
     //gyro
     public BNO055IMU imu;
@@ -64,6 +67,7 @@ public class Hardware {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
+        sampleArm = hwMap.servo.get("sampleArm");
 
         //scoring mechanism
         scoringSlide = hwMap.dcMotor.get("scoringSlide");
@@ -97,6 +101,8 @@ public class Hardware {
         wristRight = hwMap.servo.get("wristRight");
         wristLeft.setDirection(Servo.Direction.REVERSE);
 
+        intakeDetector = hwMap.get(ColorSensor.class, "intakeDetector");
+
         //intake
         intake = hwMap.dcMotor.get("intake");
         intakeStop = hwMap.servo.get("intakeStop");
@@ -108,10 +114,10 @@ public class Hardware {
 
     public void resetMotors(){
         scoringSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        scoringSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        scoringSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 }

@@ -29,7 +29,7 @@ public class MineralScorer {
             scoringToggle = true;
 
             if(robot.scoringSlide.getTargetPosition()==0) {
-                robot.scoringSlide.setTargetPosition(950);
+                robot.scoringSlide.setTargetPosition(1000);
                 collection.collect = false;
             }
             else {
@@ -56,11 +56,11 @@ public class MineralScorer {
         if(robot.scoringSlide.getCurrentPosition()<100)
             robot.scoringStop.setPosition(0);
         else if(open && !barToggle) {
-            if(robot.scoringStop.getPosition() == 0.5){
+            if(robot.scoringStop.getPosition() == 0.3){
                 robot.scoringStop.setPosition(0);
             }
             else {
-                robot.scoringStop.setPosition(0.5);
+                robot.scoringStop.setPosition(0.3);
             }
             barToggle = true;
         }

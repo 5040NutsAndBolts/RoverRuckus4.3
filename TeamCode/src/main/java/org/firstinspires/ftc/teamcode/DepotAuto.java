@@ -6,13 +6,14 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
  * Auto for the depot landing spot
  */
-@Autonomous(name="Depot Auto Other", group="Auto")
+@Autonomous(name="Depot Auto", group="Auto")
 public class DepotAuto extends AutoMethods {
 
     //class objects
@@ -107,7 +108,7 @@ public class DepotAuto extends AutoMethods {
         detector.enable();
 
         //lands the robot and returns what position the gold mineral is in
-        int goldPos = landing(285,robot,detector, driveTrain);
+        int goldPos = landing(-92,robot,detector, driveTrain);
 
         robot.rightDriveFront.setTargetPosition(robot.rightDriveFront.getCurrentPosition());
         robot.leftDriveFront.setTargetPosition(robot.leftDriveFront.getCurrentPosition());
@@ -127,7 +128,6 @@ public class DepotAuto extends AutoMethods {
 
 
         //sets wrist down for placing the TM
-        collection.wristSetPosition(0.4);
         while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 10 && opModeIsActive()) {
             telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
             telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -148,6 +148,7 @@ public class DepotAuto extends AutoMethods {
 
             if(robot.rightDriveFront.getCurrentPosition() > 200){
                 //runs slide out for placing the TM
+                collection.wristPos = collection.wristDownPos;
                 robot.collectionSlide.setPower(0.6);
                 robot.collectionSlide.setTargetPosition(550);
             }
@@ -161,7 +162,6 @@ public class DepotAuto extends AutoMethods {
         }
 
         //starts dropping TM
-        collection.wristPos = collection.wristDownPos;
         time.reset();
         while(time.seconds()<0.5){}
         time.reset();
@@ -174,7 +174,7 @@ public class DepotAuto extends AutoMethods {
 
         robot.collectionSlide.setTargetPosition(0);
         while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
-                robot.intake.setPower(0);
+            robot.intake.setPower(0);
             telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
             telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
             telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
@@ -203,7 +203,7 @@ public class DepotAuto extends AutoMethods {
                 telemetry.update();
             }
 
-            collection.wristSetPosition(0.6);
+            collection.wristPos = collection.wristUpPos;
             time.reset();
             //pulls slide back in
             robot.collectionSlide.setTargetPosition(-20);
@@ -227,7 +227,7 @@ public class DepotAuto extends AutoMethods {
             robot.intake.setPower(-1);
             runToForwardWait(7,robot,driveTrain);
 
-            collection.wristSetPosition(1);
+            collection.wristPos = collection.wristUpPos;
             time.reset();
 
             robot.intake.setPower(-0.6);
@@ -252,7 +252,7 @@ public class DepotAuto extends AutoMethods {
                 telemetry.update();
             }
 
-            collection.wristSetPosition(1);
+            collection.wristPos = collection.wristUpPos;
             time.reset();
             //pulls slide back in
             robot.collectionSlide.setTargetPosition(0);
@@ -333,10 +333,10 @@ public class DepotAuto extends AutoMethods {
         runToRotateWait(-95,robot,driveTrain);
 
         runToForwardWait(35,robot,driveTrain);
-        runToRotateWait(-45,robot,driveTrain);
-        runToSidewaysWait(-10,robot,driveTrain);
+        runToRotateWait(-50,robot,driveTrain);
+        runToSidewaysWait(-12,robot,driveTrain);
         runToForwardWait(15,robot,driveTrain);
-        collection.wristSetPosition(0.4);
+        collection.wristPos = 0.4;
         time.reset();
         while(time.seconds() < 0.5){}
         t1.interrupt();

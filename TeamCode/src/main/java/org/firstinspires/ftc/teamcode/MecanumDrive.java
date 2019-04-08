@@ -165,4 +165,9 @@ public class MecanumDrive {
         robot.rightDriveRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDriveRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+    public void brakeMotors() {
+        forwardInch(0);
+        powerSet(0.1);
+    }
 }

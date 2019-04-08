@@ -127,7 +127,7 @@ class AutoMethods extends LinearOpMode {
                 telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
                 telemetry.addData("power", power);
                 telemetry.update();
-                power+=0.05;
+                power+=0.1;
                 driveTrain.powerSet(power);
             }
     }
@@ -142,12 +142,12 @@ class AutoMethods extends LinearOpMode {
     public int landing(int rotate,Hardware robot, GoldAlignDetector detector, MecanumDrive driveTrain) {
         int goldPos = 3;
         //lowers hang mechanism
-        robot.hang.setTargetPosition(3250);
+        robot.hang.setTargetPosition(6089);
         robot.hang.setPower(1);
-        while(opModeIsActive() && robot.hang.getCurrentPosition() < 3200) {
+        while(opModeIsActive() && robot.hang.getCurrentPosition() < robot.hang.getTargetPosition()-20) {
             //scans for gold mineral spot
-            if(robot.hang.getCurrentPosition() < 2000) {
-                if (detector.getYPosition() > 300) {
+            if(robot.hang.getCurrentPosition() < 3000) {
+                if (detector.getYPosition() > 200) {
                     goldPos = 2;
                     detector.disable();
                 } else if (detector.getYPosition() > 0) {
@@ -170,7 +170,9 @@ class AutoMethods extends LinearOpMode {
         //moves hook off the lander
         //runToForwardWait(-4,robot,driveTrain);
         runToRotateWait(rotate,robot,driveTrain);
-        robot.hang.setTargetPosition(0);
+        if(rotate != 0) {
+            robot.hang.setTargetPosition(0);
+        }
 
         //moves away from hook
         //runToSidewaysWait(4,robot,driveTrain);

@@ -28,6 +28,8 @@ public class Teleop extends OpMode {
     private LiftMechanism lifter;
     private Collection collection;
 
+    private boolean brake = false;
+
     private Thread t1 = new Thread(){
         public void run() {
             while(!t1.isInterrupted()) {
@@ -140,15 +142,12 @@ public class Teleop extends OpMode {
 
         //the scoring method calls
         mineralScorer.slide(x2);
-        mineralScorer.mineralStop(rightTrigger2);
+        mineralScorer.mineralStop(rightBumper2);
 
         //the collection method calls
-        collection.wrist(leftTrigger2);
-        collection.inTake(leftBumper2, y2
-
-        );
+        collection.wrist(leftBumper2);
+        collection.inTake(leftBumper2, y2);
         collection.slide(rightBumper1, leftBumper1);
-        collection.inTakeStop(rightBumper2);
 
         //the lift call
         lifter.lift(leftTrigger1, gamepad1.right_trigger > 0.3);
@@ -165,7 +164,21 @@ public class Teleop extends OpMode {
             else if(dPadDown1) {
                 leftStickY1 = 0.4;
             }
-        driveTrain.orientedDrive(leftStickY1, leftStickX1, -rightStickX1,x1);
+
+
+            if(leftStickX1 == 0 && leftStickY1 == 0 && rightStickX1 == 0 && !x1) {
+                driveTrain.brakeMotors();
+                brake = true;
+            }
+            else {
+                if(brake) {
+                    robot.leftDriveRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.leftDriveFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.rightDriveRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    robot.rightDriveFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                }
+                driveTrain.orientedDrive(leftStickY1, leftStickX1, -rightStickX1, x1);
+            }
 
 
         //telemetry lines
@@ -186,6 +199,8 @@ public class Teleop extends OpMode {
         telemetry.addLine("--------COLLECTION WRIST--------");
         telemetry.addData("Left Wrist Position", robot.wristLeft.getPosition());
         telemetry.addData("Right Wrist Position", robot.wristRight.getPosition());
+        telemetry.addData("color Sensor argb", robot.intakeDetector.argb());
+        telemetry.addData("color Sensor alpha", robot.intakeDetector.alpha());
         telemetry.addLine("--------COLLECTION INTAKE--------");
         telemetry.addData("Intake Power", robot.intake.getPower());
         telemetry.addLine("--------COLLECTION SLIDE--------");

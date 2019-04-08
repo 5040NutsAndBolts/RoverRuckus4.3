@@ -13,9 +13,10 @@ public class Collection {
     private boolean wristReset = false;
     private boolean wristToggle = false;   //toggle for the wrist
     public boolean collect = false;
-    public double wristDownPos = 0.25;
+    public double wristDownPos = 0;
     public double wristUpPos = 1;
-    public double wristPos = 0.80;
+    public double wristPos = 0.7;
+    public boolean canTransfer = false;
 
 
     /**
@@ -36,7 +37,8 @@ public class Collection {
     {
 
         wristSetPosition(wristPos);
-        if(robot.collectionSlide.getCurrentPosition() > 650) {
+        if(robot.collectionSlide.getCurrentPosition() > 500) {
+            robot.scoringSlide.setTargetPosition(0);
             wristPos=wristDownPos;
             collect = true;
         }
@@ -68,20 +70,28 @@ public class Collection {
      * @param out - when true will spit out minerals
      */
     public void inTake(boolean in, boolean out) {
+
+        if(robot.scoringSlide.getPower() == 1) {
+            canTransfer = false;
+            robot.intakeStop.setPosition(0.02);
+        }
         if(out) {
             robot.intake.setPower(0.7);
         }
-        else if(robot.intakeStop.getPosition() == 0.37){
+        else if(robot.intakeDetector.alpha() > 120 && robot.scoringSlide.getPower() != 1 &&
+                robot.wristLeft.getPosition() == wristUpPos && canTransfer){
             robot.intake.setPower(-0.8);
+            robot.intakeStop.setPosition(0.37);
+            //slide(true,false);
+            collect = false;
         }
         else if(collect) {
             robot.intake.setPower(-1);
+            robot.intakeStop.setPosition(0.02);
+            canTransfer = true;
         }
         else{
             robot.intake.setPower(0);
-        }
-        if(robot.hang.getCurrentPosition() > 50) {
-            collect = false;
         }
     }
 
@@ -93,7 +103,7 @@ public class Collection {
     public  void slide(boolean in, boolean out) {
         if(out) {
             robot.collectionSlide.setPower(0.5);
-            robot.collectionSlide.setTargetPosition(1100);
+            robot.collectionSlide.setTargetPosition(930);
             //if(wristDown)
                // wristSetPosition(0.3);
         }
@@ -108,14 +118,29 @@ public class Collection {
     }
 
     public void inTakeStop(boolean stop){
-        if(robot.scoringSlide.getCurrentPosition()<10 && robot.collectionSlide.getCurrentPosition()<20 &&
+        /*if(robot.scoringSlide.getCurrentPosition() > 100 || robot.hang.getPower() == 1) {
+            canTransfer = false;
+        }
+        if(robot.wristLeft.getPosition() == wristDownPos) {
+            canTransfer = true;
+        }
+        if(robot.intakeDetector.alpha() > 120 && canTransfer) {
+            robot.intakeStop.setPosition(0.37);
+            slide(true,false);
+        }
+        else if(robot.intakeDetector.alpha() < 120) {
+            collect = true;
+            robot.intakeStop.setPosition(0.02);
+        }*/
+
+        /*if(robot.scoringSlide.getCurrentPosition()<10 && robot.collectionSlide.getCurrentPosition()<20 &&
                 (robot.wristLeft.getPosition() == wristUpPos) && stop) {
             robot.intakeStop.setPosition(0.37);
             collect = false;
             slide(true,false);
         }
         else
-            robot.intakeStop.setPosition(0.02);
+            robot.intakeStop.setPosition(0.02);*/
     }
 
 }
