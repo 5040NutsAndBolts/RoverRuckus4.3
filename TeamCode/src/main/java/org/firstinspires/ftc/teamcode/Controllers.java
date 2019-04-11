@@ -7,7 +7,7 @@ public class Controllers {
     /**
      * The instance fields: <code>gamepadMode1</code> and <code>gamepadMode2</code> determine which controller is using the alternative control scheme.
      */
-    private int gamepadMode1 = 0, gamepadMode2 = 0;
+    public int gamepadMode1 = 0, gamepadMode2 = 0;
 
     /**
      *  <code>isStartXPressable</code> is used for the toggle of start-x, it is used to make switching between the two

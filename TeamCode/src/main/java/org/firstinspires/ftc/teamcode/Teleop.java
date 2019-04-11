@@ -27,6 +27,7 @@ public class Teleop extends OpMode {
     private MecanumDrive driveTrain;
     private LiftMechanism lifter;
     private Collection collection;
+    private Controllers controllers;
 
     private boolean brake = false;
 
@@ -54,6 +55,7 @@ public class Teleop extends OpMode {
         driveTrain = new MecanumDrive(robot);
         lifter = new LiftMechanism(robot);
         mineralScorer = new MineralScorer(robot);
+        controllers = new Controllers();
     }
 
     /**
@@ -118,55 +120,35 @@ public class Teleop extends OpMode {
     public void loop() {
         //t1.run();
         //t2.run();
-        //inputs for controller 1
-        double leftStickY1 = gamepad1.left_stick_y;
-        double leftStickX1 = gamepad1.left_stick_x;
-        double rightStickX1 = gamepad1.right_stick_x;
-        boolean leftBumper1 = gamepad1.left_bumper;
-        boolean rightBumper1 = gamepad1.right_bumper;
-        boolean dPadDown1 = gamepad1.dpad_down;
-        boolean dPadRight1 = gamepad1.dpad_right;
-        boolean dPadLeft1 = gamepad1.dpad_left;
-        boolean dPadUp1 = gamepad1.dpad_up;
-        boolean x1 = gamepad1.x;
-        boolean leftTrigger1 = gamepad1.left_trigger > 0.3;
-
-        //controller 2 input
-        boolean leftBumper2 = gamepad2.left_bumper;
-        boolean rightBumper2 = gamepad2.right_bumper;
-        boolean x2 = gamepad2.x;
-        boolean y2 = gamepad2.y;
-        boolean rightTrigger2 = gamepad2.right_trigger > 0.3;
-        boolean leftTrigger2 = gamepad2.left_trigger > 0.3;
-        double leftStickY2 = gamepad2.left_stick_y;
+        controllers.update(gamepad1, gamepad2);
 
         //the scoring method calls
-        mineralScorer.slide(x2);
-        mineralScorer.mineralStop(rightBumper2);
+        mineralScorer.slide(controllers.x_button2);
+        mineralScorer.mineralStop(controllers.right_bumper2);
 
         //the collection method calls
-        collection.wrist(leftBumper2);
-        collection.inTake(leftBumper2, y2);
-        collection.slide(rightBumper1, leftBumper1);
+        collection.wrist(controllers.left_bumper2);
+        collection.inTake(controllers.left_bumper2, controllers.y_button2);
+        collection.slide(controllers.right_bumper1, controllers.left_bumper1);
 
         //the lift call
-        lifter.lift(leftTrigger1, gamepad1.right_trigger > 0.3);
+        lifter.lift(controllers.left_trigger1,  controllers.right_trigger1);
 
-            if(dPadLeft1) {
-                leftStickX1 = -0.4;
+            if(controllers.dleft1) {
+                controllers.left_stick_x1 = -0.4;
             }
-            else if(dPadRight1) {
-                leftStickX1 = 0.4;
+            else if(controllers.dright1) {
+                controllers.left_stick_x1 = 0.4;
             }
-            else if(dPadUp1) {
-                leftStickY1 = -0.4;
+            else if(controllers.dup1) {
+                controllers.left_stick_y1 = -0.4;
             }
-            else if(dPadDown1) {
-                leftStickY1 = 0.4;
+            else if(controllers.ddown1) {
+                controllers.left_stick_y1 = 0.4;
             }
 
 
-            if(leftStickX1 == 0 && leftStickY1 == 0 && rightStickX1 == 0 && !x1) {
+            if(controllers.left_stick_x1 == 0 && controllers.left_stick_y1 == 0 && controllers.right_stick_x1 == 0 && !controllers.x_button1) {
                 driveTrain.brakeMotors();
                 brake = true;
             }
@@ -177,11 +159,18 @@ public class Teleop extends OpMode {
                     robot.rightDriveRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     robot.rightDriveFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 }
-                driveTrain.orientedDrive(leftStickY1, leftStickX1, -rightStickX1, x1);
+                driveTrain.orientedDrive(controllers.left_stick_y1, controllers.left_stick_x1, -controllers.right_stick_x1, controllers.x_button1);
             }
 
+        //resets
+        mineralScorer.reset(controllers.y_button3);
+        collection.reset(controllers.right_bumper3);
+        lifter.reset(controllers.left_bumper3);
 
         //telemetry lines
+        telemetry.addLine("-------Controllers-------");
+        telemetry.addData("start-a is in start-x", controllers.gamepadMode1==1);
+        telemetry.addData("start-b is in start-x", controllers.gamepadMode2==1);
         telemetry.addLine("--------IMU--------");
         telemetry.addData("imu heading radians", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS).firstAngle);
         telemetry.addData("imu heading degrees", robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
@@ -210,7 +199,7 @@ public class Teleop extends OpMode {
         telemetry.addData("scoring slide position", robot.scoringSlide.getCurrentPosition());
         telemetry.addData("scoring slide power", robot.scoringSlide.getPower());
         telemetry.addLine("-----MINERAL Stop BAR-----");
-        telemetry.addData("right Trigger 2",rightTrigger2);
+        telemetry.addData("right Trigger 2", controllers.right_trigger2);
         telemetry.addData("scoring bar position", robot.scoringStop.getPosition());
         telemetry.update();
     }

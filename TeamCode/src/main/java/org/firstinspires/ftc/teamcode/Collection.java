@@ -12,6 +12,8 @@ public class Collection {
 
     private boolean wristReset = false;
     private boolean wristToggle = false;   //toggle for the wrist
+    private boolean resetToggle = false;
+
     public boolean collect = false;
     public double wristDownPos = 0;
     public double wristUpPos = 1;
@@ -141,6 +143,25 @@ public class Collection {
         }
         else
             robot.intakeStop.setPosition(0.02);*/
+    }
+
+    /**
+     * method for resetting the slide back in
+     * @param resetting - when true it will start moving slide in
+     */
+    public void reset(boolean resetting) {
+        if(resetting){
+            resetToggle = true;
+            robot.collectionSlide.setPower(.5);
+            robot.collectionSlide.setTargetPosition(-1000);
+        }
+        else if (resetToggle) {
+            resetToggle = false;
+            robot.collectionSlide.setPower(.8);
+            robot.collectionSlide.setTargetPosition(robot.scoringSlide.getCurrentPosition());
+            robot.collectionSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.collectionSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
     }
 
 }

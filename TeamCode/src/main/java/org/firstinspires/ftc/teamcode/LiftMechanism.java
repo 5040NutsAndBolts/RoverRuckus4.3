@@ -8,6 +8,7 @@ public class LiftMechanism {
 
     private boolean liftToggle = false;   //toggle for the lift
     private boolean downReset = false;    //keeps track of if it should reset the hanging motor position
+    private boolean resetToggle = false;
 
     LiftMechanism(Hardware r) {
         robot = r;
@@ -58,4 +59,24 @@ public class LiftMechanism {
             downReset = false;
         }
     }
+
+    /**
+     * method for resetting the lift back to the bottom
+     * @param resetting - when true it will start moving lift down
+     */
+    public void reset(boolean resetting){
+        if(resetting){
+            resetToggle = true;
+            robot.hang.setPower(1);
+            robot.hang.setTargetPosition(-8000);
+        }
+        else if(resetToggle){
+            resetToggle = false;
+            robot.hang.setPower(0);
+            robot.hang.setTargetPosition(robot.hang.getCurrentPosition());
+            robot.hang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.hang.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+    }
+
 }

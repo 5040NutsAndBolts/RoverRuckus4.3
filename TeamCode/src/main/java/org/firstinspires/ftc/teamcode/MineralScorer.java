@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import static java.lang.Math.abs;
 
 /**
@@ -10,9 +12,10 @@ public class MineralScorer {
     Hardware robot;
 
     private boolean scoringToggle = false;     //toggle for the scoring slide
-    private  boolean barToggle = false;        //toggle for the scoring bar
+    private boolean barToggle = false;        //toggle for the scoring bar
     private double slidePower = 0.3;
     private Collection collection;
+    private boolean resetToggle = false;
 
     MineralScorer(Hardware r) {
         robot = r;
@@ -66,6 +69,25 @@ public class MineralScorer {
         }
         else if(!open && barToggle) {
             barToggle = false;
+        }
+    }
+
+    /**
+     * method for resetting the scorer back to the bottom
+     * @param resetting - when true it will start moving scorer down
+     */
+    public void reset(boolean resetting) {
+        if(resetting){
+            resetToggle = true;
+            robot.scoringSlide.setPower(.2);
+            robot.scoringSlide.setTargetPosition(-1000);
+        }
+        else if (resetToggle) {
+            resetToggle = false;
+            robot.scoringSlide.setPower(.5);
+            robot.scoringSlide.setTargetPosition(robot.scoringSlide.getCurrentPosition());
+            robot.scoringSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.scoringSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 }
