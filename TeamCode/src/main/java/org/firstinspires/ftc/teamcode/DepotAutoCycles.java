@@ -54,18 +54,6 @@ public class DepotAutoCycles extends AutoMethods {
         //initializes the robot hardware and sets powers so things don't move
         robot.init(hardwareMap,true);
 
-        //gyro setup
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
-        robot.imu.initialize(parameters);
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
         robot.collectionSlide.setPower(0.6);
         robot.collectionSlide.setTargetPosition(0);
 
@@ -75,10 +63,9 @@ public class DepotAutoCycles extends AutoMethods {
         robot.scoringSlide.setTargetPosition(0);
         robot.scoringSlide.setPower(0);
 
-        collection.wristSetPosition(0.75);
         robot.scoringStop.setPosition(0);
-        robot.intakeStop.setPosition(0.37);
-        robot.sampleArm.setPosition(1);
+        robot.intakeStop.setPosition(0.4);
+        robot.sampleArm.setPosition(0);
 
         t1.start();
         t2.start();
@@ -103,8 +90,6 @@ public class DepotAutoCycles extends AutoMethods {
             }
             else if(!gamepad1.x && spotToggle)
                 spotToggle = false;
-
-            telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
             telemetry.addData("Driver spot",driverSpot);
             telemetry.update();
         }
@@ -142,80 +127,105 @@ public class DepotAutoCycles extends AutoMethods {
             driveTrain.powerSet(power);
 
             //runs slide out for placing the TM
-            if(goldPos != 2) {
-                if (robot.collectionSlide.getCurrentPosition() > 120) {
-                    collection.wristPos = collection.wristDownPos;
+            if(goldPos == 2) {
+                collection.wristPos = collection.wristDownPos;
+                robot.collectionSlide.setPower(0.5);
+                robot.collectionSlide.setTargetPosition(850);
+            }
+
+        }
+        collection.wristPos = collection.wristDownPos;
+
+        if(goldPos == 1) {
+            runToRotateWait(-45,robot,driveTrain);
+        }
+        else if(goldPos == 3){
+            runToRotateWait(45,robot,driveTrain);
+        }
+        if(goldPos != 2) {
+            robot.collectionSlide.setTargetPosition(300);
+            robot.collectionSlide.setPower(0.6);
+        }
+
+
+            while (Math.abs(robot.collectionSlide.getTargetPosition() - robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos", robot.collectionSlide.getCurrentPosition());
+                telemetry.addData("power", power);
+                telemetry.update();
+
+                if(goldPos == 2) {
+                    if (Math.abs(robot.collectionSlide.getTargetPosition() - robot.collectionSlide.getCurrentPosition()) > 100 && opModeIsActive()) {
+                        //robot.intakeStop.setPosition(0.02);
+                    }
                 }
             }
-            else {
-                collection.wristPos = collection.wristDownPos;
-            }
-            robot.collectionSlide.setPower(0.45);
+
+        //turns back to face the Depot as well as starts to extend the slide out for placing the TM
+        if(goldPos != 2) {
             robot.collectionSlide.setTargetPosition(850);
+            robot.collectionSlide.setPower(0.5);
 
+            if(goldPos == 1) {
+                power = 0;
+                driveTrain.powerSet(power);
+                driveTrain.rotate(55);
+                while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
+                    telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                    telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                    telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                    telemetry.addData("power", power);
+                    telemetry.update();
+                    power+=0.1;
+                    driveTrain.powerSet(power);
+                }
+            }
+            else if(goldPos == 3) {
+                runToRotateWait(-57,robot,driveTrain);
+            }
+
+            robot.collectionSlide.setTargetPosition(850);
+            robot.collectionSlide.setPower(0.5);
+            //makes sure slide is all the way out and drops the TM.
+            while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.addData("power", power);
+                telemetry.update();
+            }
         }
-
-        while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
-            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
-            telemetry.addData("power", power);
-            telemetry.update();
-        }
-
-        robot.intake.setPower(0.65);
-        time.reset();
-        while(time.seconds() > 0.15 && opModeIsActive()){}
+        robot.intakeStop.setPosition(0.02);
         robot.collectionSlide.setTargetPosition(0);
 
-        if(goldPos ==1) {
-            runToRotateWait(-44,robot,driveTrain);
-        }
-        else if(goldPos == 3) {
-            runToRotateWait(45, robot, driveTrain);
-        }
-        else {
-            time.reset();
-            while(time.seconds() < 0.5 && opModeIsActive()){}
-        }
-
-        time.reset();
-        while(time.seconds() < 0.2 && opModeIsActive()){}
         while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
             robot.intake.setPower(0);
             telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
             telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
             telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
-            telemetry.addData("power", power);
+            telemetry.addData("power", power)   ;
             telemetry.update();
 
-            if(robot.collectionSlide.getCurrentPosition() < 250) {
+            //sets wrist up when slid comes in enough but before it hits off the center mineral
+            if(robot.collectionSlide.getCurrentPosition() < 450) {
                 collection.wristPos = collection.wristUpPos;
             }
         }
         collection.wristPos = collection.wristUpPos;
-        robot.intake.setPower(0);
 
         robot.collectionSlide.setTargetPosition(0);
         robot.collectionSlide.setPower(0.6);
 
-        if(goldPos == 1) {
-            runToRotateWait(-43, robot, driveTrain);
-        }
-        else if(goldPos == 2){
-            runToRotateWait(-90,robot,driveTrain);
-        }
-        else {
-            runToRotateWait(-137, robot, driveTrain);
-        }
-        time.reset();
-        while(time.seconds() < 0.2 && opModeIsActive()){}
+        //rotates to face Crater to go pick up minerals
+        runToRotateWait(-87,robot,driveTrain);
 
 
         //drive to crater
-        runToForwardWait(45,robot,driveTrain);
+        runToForwardWait(40,robot,driveTrain);
         runToRotateWait(-45,robot,driveTrain);
 
+        //moves diagnolly so we know where is is located up against the Crater.
         power = 1;
         driveTrain.resetMotors();
         robot.leftDriveFront.setTargetPosition(1200);
@@ -232,33 +242,35 @@ public class DepotAutoCycles extends AutoMethods {
             driveTrain.powerSet(power);
         }
 
+        //sets wrist down and starts intaking
         robot.intake.setPower(-1);
         collection.wristPos = collection.wristDownPos;
 
         time.reset();
         while(time.seconds() < 0.5 && opModeIsActive()){}
 
+        //runs slide out and pulls it back in to pick up minerals
         robot.collectionSlide.setPower(0.45);
         robot.collectionSlide.setTargetPosition(650);
-
         while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 20 && opModeIsActive()) {}
 
         robot.collectionSlide.setTargetPosition(0);
 
         while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 20 && opModeIsActive()) {
-            if(robot.collectionSlide.getCurrentPosition() < 250) {
+            if(robot.collectionSlide.getCurrentPosition() < 300) {
                 collection.wristPos = collection.wristUpPos;
             }
-            if(robot.intakeDetector.alpha() > 120) {
+            //transfers minerals when wrist is all the way back up.
+            if(robot.intakeDetector.alpha() > 200) {
                 robot.intake.setPower(-0.8);
                 robot.intakeStop.setPosition(0.37);
             }
         }
 
-        //runs back to go to lander
+        //moves back to go to lander
         power = 0;
         driveTrain.powerSet(power);
-        driveTrain.forwardInch(-8);
+        driveTrain.forwardInch(-7);
         while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
             telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
             telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -275,13 +287,14 @@ public class DepotAutoCycles extends AutoMethods {
                 if (power < 0.7)
                     power += 0.05;
             }
-            if(robot.intakeDetector.alpha() > 120) {
+            if(robot.intakeDetector.alpha() > 200) {
                 robot.intake.setPower(-0.8);
                 robot.intakeStop.setPosition(0.37);
             }
             driveTrain.powerSet(power);
         }
 
+        //moves away from the wall to rotate to move level with lander
         runToSidewaysWait(5,robot,driveTrain);
         robot.intake.setPower(0);
         runToRotateWait(47,robot,driveTrain);
@@ -292,11 +305,9 @@ public class DepotAutoCycles extends AutoMethods {
         telemetry.addData("scoring slide target pos", robot.scoringSlide.getTargetPosition());
         telemetry.addData("scoring slide cur pos", robot.scoringSlide.getCurrentPosition());
         telemetry.update();
-        time.reset();
-        //while(time.seconds() < 5 && opModeIsActive()){}
 
 
-        runToForwardWait(-42,robot,driveTrain);
+        runToForwardWait(-45,robot,driveTrain);
         runToRotateWait(85,robot,driveTrain);
         runToForwardWait(-20,robot,driveTrain);
 
@@ -310,7 +321,7 @@ public class DepotAutoCycles extends AutoMethods {
         robot.scoringSlide.setPower(0.5);
 
         runToRotateWait(-86,robot,driveTrain);
-        runToForwardWait(47,robot,driveTrain); System.out.println("oof ouch owie my bones");
+        runToForwardWait(47,robot,driveTrain);
 
         runToRotateWait(-40,robot,driveTrain);
 

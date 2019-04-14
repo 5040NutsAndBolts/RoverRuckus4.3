@@ -16,8 +16,8 @@ public class Collection {
 
     public boolean collect = false;
     public double wristDownPos = 0;
-    public double wristUpPos = 1;
-    public double wristPos = 0.7;
+    public double wristUpPos = 0.85;
+    public double wristPos = wristUpPos;
     public boolean canTransfer = false;
 
 

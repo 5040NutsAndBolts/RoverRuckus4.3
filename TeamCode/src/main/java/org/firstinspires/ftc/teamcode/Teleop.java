@@ -94,7 +94,10 @@ public class Teleop extends OpMode {
      */
     @Override
     public void start() {
+        //starts the threads runs run()
         collection = new Collection(robot);
+        t1.start();
+        t2.start();
         // creates a new reference for the file and parses the line to a double
         //      Will fix later if the exportData will always be a double
         try {
@@ -109,9 +112,6 @@ public class Teleop extends OpMode {
             //robot.resetMotors();
         }robot.scoringStop.setPosition(0);
 
-        //starts the threads runs run()
-        t1.start();
-        t2.start();
     }
 
     /**

@@ -56,17 +56,6 @@ public class CraterAuto extends AutoMethods {
         //initializes the robot hardware and sets powers so things don't move
         robot.init(hardwareMap,true);
 
-        //gyro setup
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
-        robot.imu.initialize(parameters);
-        robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         robot.collectionSlide.setPower(0.3);
         robot.collectionSlide.setTargetPosition(0);
@@ -104,7 +93,6 @@ public class CraterAuto extends AutoMethods {
             else if(!gamepad1.x && spotToggle)
                 spotToggle = false;
 
-            telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
             telemetry.addData("Driver spot",driverSpot);
             telemetry.update();
         }

@@ -68,20 +68,6 @@ public class MecanumDrive {
         } else {
             rotation /= 2;
         }
-
-        /*if(!stop && forward==0 && sideways==0 && rotation==0){
-            forwardInch(0);
-            powerSet(0.2);
-            stop = true;
-        }
-        else if(stop &&(forward!=0 || sideways!=0 || rotation!=0)) {
-            robot.leftDriveFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftDriveRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightDriveFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightDriveRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            stop = false;
-        }
-        else if(!stop) {*/
             double v5 = P * Math.sin(robotAngle - angles.firstAngle + adjust) + P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
             double v6 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) + rotation;
             double v7 = P * Math.sin(robotAngle - angles.firstAngle + adjust) - P * Math.cos(robotAngle - angles.firstAngle + adjust) - rotation;
@@ -91,7 +77,6 @@ public class MecanumDrive {
             robot.rightDriveFront.setPower(v6);
             robot.leftDriveRear.setPower(v7);
             robot.rightDriveRear.setPower(v8);
-        //}
     }
 
     /**
