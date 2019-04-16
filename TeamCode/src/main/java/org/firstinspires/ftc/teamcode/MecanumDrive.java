@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import com.qualcomm.robotcore.util.Range;
 
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ public class MecanumDrive {
     Hardware robot;
     public double adjust = 0;
     private boolean stop = false;
+    private PID forwardPid = new PID(0.00099,Long.MAX_VALUE,0);
 
     /**
      * sets up the hardware refernce so you don't have to pass it as a parameter and sets the adjust
@@ -85,8 +87,16 @@ public class MecanumDrive {
      */
     public void powerSet(double power) {
         robot.leftDriveFront.setPower(power);
-        robot.leftDriveRear.setPower(power);
         robot.rightDriveFront.setPower(power);
+        robot.leftDriveRear.setPower(power);
+        robot.rightDriveRear.setPower(power);
+    }
+
+    public void powerSetClipped(double power) {
+        power = Range.clip(power, -0.7, 0.7);
+        robot.leftDriveFront.setPower(power);
+        robot.rightDriveFront.setPower(power);
+        robot.leftDriveRear.setPower(power);
         robot.rightDriveRear.setPower(power);
     }
 
@@ -104,6 +114,26 @@ public class MecanumDrive {
         robot.leftDriveRear.setTargetPosition(fPos);
         robot.rightDriveFront.setTargetPosition(fPos);
         robot.rightDriveRear.setTargetPosition(fPos);
+    }
+
+    public double forwardPID(){
+        double error = robot.leftDriveFront.getTargetPosition() - robot.leftDriveFront.getCurrentPosition();
+        powerSetClipped(forwardPid.update(error));
+        return error; // For testing purposes
+    }
+
+    /**
+     * Updates the power for the motor position drive
+     */
+    public void updateForwardInch(PID forwardPid) {
+        if (robot.leftDriveFront.isBusy()) {
+            double error = robot.leftDriveFront.getTargetPosition() - robot.leftDriveFront.getCurrentPosition();
+
+            robot.leftDriveFront.setPower(forwardPid.update(error));
+            robot.leftDriveRear.setPower(forwardPid.update(error));
+            robot.rightDriveFront.setPower(forwardPid.update(error));
+            robot.rightDriveRear.setPower(forwardPid.update(error));
+        }
     }
 
     /**

@@ -65,17 +65,7 @@ class AutoMethods extends LinearOpMode {
             telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
             telemetry.addData("power", power);
             telemetry.update();
-            if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<400) {
-                if (power > 0.25)
-                    power -= 0.05;
-                else
-                    power += 0.05;
-            }
-            else {
-                if (power < 0.7)
-                    power += 0.05;
-            }
-            driveTrain.powerSet(power);
+            driveTrain.forwardPID();
         }
     }
 
@@ -107,6 +97,36 @@ class AutoMethods extends LinearOpMode {
                         power += 0.05;
                 }
                 driveTrain.powerSet(power);
+            }
+    }
+
+    /**
+     * moves the robot sideways so many inches while increasing speed
+     * stays in loop until it reaches distance
+     * @param forewardInches - how far sideways it needs to go
+     * @param robot - the hardware object to move the motors
+     * @param driveTrain - the MecanumDrive object so it can use the sidewaysInch method
+     */
+    public void runToForewardWaitPID(int forewardInches,Hardware robot, MecanumDrive driveTrain) {
+        double power = 0;
+        driveTrain.powerSet(power);
+        driveTrain.forwardInch(forewardInches);
+        while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
+            telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+            telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+            telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+            telemetry.addData("power", power);
+            telemetry.update();
+            driveTrain.powerSet(power);
+        }            if(Math.abs(robot.rightDriveFront.getCurrentPosition()-robot.rightDriveFront.getTargetPosition())<400) {
+                if (power > 0.4)
+                    power -= 0.05;
+                else
+                    power += 0.05;
+            }
+            else {
+                if (power < 0.7)
+                    power += 0.05;
             }
     }
 

@@ -54,7 +54,7 @@ public class CraterAuto extends AutoMethods {
         //initializes the robot hardware and sets powers so things don't move
         robot.init(hardwareMap,true);
 
-        robot.collectionSlide.setPower(0.6);
+        robot.collectionSlide.setPower(0.3);
         robot.collectionSlide.setTargetPosition(0);
 
         robot.hang.setTargetPosition(0);
@@ -145,7 +145,6 @@ public class CraterAuto extends AutoMethods {
             robot.collectionSlide.setTargetPosition(300);
             robot.collectionSlide.setPower(0.6);
         }
-
 
         while (Math.abs(robot.collectionSlide.getTargetPosition() - robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
             telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
