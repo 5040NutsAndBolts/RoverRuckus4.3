@@ -22,8 +22,6 @@ public class Hardware {
 
     HardwareMap hwMap;
 
-    public Servo sampleArm = null;
-
     //scoring mechanism
     public DcMotor scoringSlide = null;
     public Servo scoringStop = null;
@@ -66,8 +64,6 @@ public class Hardware {
     public void init(HardwareMap ahwMap, boolean resetMotors) {
         // Save reference to Hardware map
         hwMap = ahwMap;
-
-        sampleArm = hwMap.servo.get("sampleArm");
 
         //scoring mechanism
         scoringSlide = hwMap.dcMotor.get("scoringSlide");

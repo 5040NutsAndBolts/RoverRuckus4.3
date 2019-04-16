@@ -65,7 +65,6 @@ public class DepotAutoCycles extends AutoMethods {
 
         robot.scoringStop.setPosition(0);
         robot.intakeStop.setPosition(0.4);
-        robot.sampleArm.setPosition(0);
 
         t1.start();
         t2.start();
@@ -168,18 +167,7 @@ public class DepotAutoCycles extends AutoMethods {
             robot.collectionSlide.setPower(0.5);
 
             if(goldPos == 1) {
-                power = 0;
-                driveTrain.powerSet(power);
-                driveTrain.rotate(55);
-                while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
-                    telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
-                    telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
-                    telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
-                    telemetry.addData("power", power);
-                    telemetry.update();
-                    power+=0.1;
-                    driveTrain.powerSet(power);
-                }
+                runToRotateWait(55,robot,driveTrain);
             }
             else if(goldPos == 3) {
                 runToRotateWait(-57,robot,driveTrain);
@@ -312,7 +300,7 @@ public class DepotAutoCycles extends AutoMethods {
         runToForwardWait(-20,robot,driveTrain);
 
         //deposits mineral
-        robot.scoringStop.setPosition(0.3);
+        robot.scoringStop.setPosition(0.35);
         time.reset();
         while(time.seconds() < 0.3 && opModeIsActive()){}
 

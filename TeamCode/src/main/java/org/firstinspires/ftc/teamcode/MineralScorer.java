@@ -59,11 +59,11 @@ public class MineralScorer {
         if(robot.scoringSlide.getCurrentPosition()<100)
             robot.scoringStop.setPosition(0);
         else if(open && !barToggle) {
-            if(robot.scoringStop.getPosition() == 0.3){
+            if(robot.scoringStop.getPosition() == 0.35){
                 robot.scoringStop.setPosition(0);
             }
             else {
-                robot.scoringStop.setPosition(0.3);
+                robot.scoringStop.setPosition(0.35);
             }
             barToggle = true;
         }

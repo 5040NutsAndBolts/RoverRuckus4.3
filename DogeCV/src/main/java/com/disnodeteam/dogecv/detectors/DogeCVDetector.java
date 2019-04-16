@@ -31,7 +31,7 @@ public abstract class DogeCVDetector extends OpenCVPipeline{
     public double maxDifference = 10;
 
     public Point cropTLCorner = null; //The top left corner of the image used for processing
-    public Point cropBRCorner = new Point(250,470); //The bottom right corner of the image used for processing
+    public Point cropBRCorner = new Point(200,470); //The bottom right corner of the image used for processing
 
     public DogeCV.DetectionSpeed speed = DogeCV.DetectionSpeed.BALANCED;
     public double downscale = 0.5;

@@ -80,7 +80,7 @@ public class Collection {
         if(out) {
             robot.intake.setPower(0.7);
         }
-        else if(robot.intakeDetector.alpha() > 120 && robot.scoringSlide.getPower() != 1 &&
+        else if(robot.intakeDetector.alpha() > 200 && robot.scoringSlide.getPower() != 1 &&
                 robot.wristLeft.getPosition() == wristUpPos && canTransfer){
             robot.intake.setPower(-0.8);
             robot.intakeStop.setPosition(0.37);
