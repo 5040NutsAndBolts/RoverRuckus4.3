@@ -105,8 +105,8 @@ public class MecanumDrive {
      * 1 inch forward = 87 MT
      * @param fInches inches forward
      */
-    public void forwardInch(int fInches){
-        int fPos = fInches*43;
+    public void forwardInch(double fInches){
+        int fPos = (int)(fInches*43);
 
         resetMotors();
 

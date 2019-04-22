@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 @Autonomous(name="PiD Test", group="Auto")
+@Disabled
 public class PIDTest extends AutoMethods {
 
     private PID pid;
@@ -81,7 +83,7 @@ public class PIDTest extends AutoMethods {
             }
 
 
-            telemetry.addData("Error:       ", driveTrain.forwardPID(pid));
+            telemetry.addData("Error:       ", driveTrain.forwardPID());
             telemetry.update();
         }
     }

@@ -32,7 +32,7 @@ public class MineralScorer {
             scoringToggle = true;
 
             if(robot.scoringSlide.getTargetPosition()==0) {
-                robot.scoringSlide.setTargetPosition(1000);
+                robot.scoringSlide.setTargetPosition(1050);
                 collection.collect = false;
             }
             else {

@@ -124,9 +124,9 @@ public class Controllers {
     public void update(Gamepad gamepad1, Gamepad gamepad2) {
         left_stick_y1        = gamepadMode1 == 0 ? gamepad1.left_stick_y : 0; //Basicly an if statement that
         right_stick_y1       = gamepadMode1 == 0 ? gamepad1.right_stick_y : 0;
-        left_stick_x1        = gamepad1.left_stick_x;
-        right_stick_x1       = gamepad1.right_stick_x;
-         left_stick_press1   = gamepad1.left_stick_button || gamepad1.right_stick_button;
+        left_stick_x1        = gamepadMode1 == 0 ? gamepad1.left_stick_x : 0;
+        right_stick_x1       = gamepadMode1 == 0 ? gamepad1.right_stick_x : 0;
+        left_stick_press1    = gamepad1.left_stick_button || gamepad1.right_stick_button;
 
         //Bumpers and Triggers
          left_bumper1        = gamepad1.left_bumper  && gamepadMode1 == 0;
@@ -159,8 +159,8 @@ public class Controllers {
         //Joystick Inputs
           left_stick_y2       = gamepadMode2 == 0 ? gamepad2.left_stick_y : 0;
           right_stick_y2      = gamepadMode2 == 0 ? gamepad2.right_stick_y : 0;
-          left_stick_x2       = gamepad2.left_stick_x;
-          right_stick_x2      = gamepad2.right_stick_x;
+          left_stick_x2       = gamepadMode2 == 0 ? gamepad2.left_stick_x : 0;
+          right_stick_x2      = gamepadMode2 == 0 ? gamepad2.right_stick_x : 0;
 
         //Bumpers and Triggers
          left_bumper2         = gamepad2.left_bumper  && gamepadMode2 == 0;
@@ -230,7 +230,7 @@ public class Controllers {
             gamepadMode1 = 0;
             gamepadMode2 = 1;
             isStartXPressable = false;
-        }else if (x_button3 && start3 && isStartXPressable) {
+        }else if ((x_button3 && start3 && isStartXPressable) || (isStartXPressable && start3 && a_button3) || (isStartXPressable && start3 && b_button3)) {
             gamepadMode1 = 0;
             gamepadMode2 = 0;
             isStartXPressable = false;

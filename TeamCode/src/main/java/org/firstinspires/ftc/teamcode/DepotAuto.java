@@ -5,6 +5,7 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
  * Auto for the depot landing spot
  */
 @Autonomous(name="Depot Auto", group="Auto")
+@Disabled
 public class DepotAuto extends AutoMethods {
 
     //class objects

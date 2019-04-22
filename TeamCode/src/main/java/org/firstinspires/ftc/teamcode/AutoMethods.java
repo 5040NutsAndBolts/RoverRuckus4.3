@@ -204,7 +204,7 @@ class AutoMethods extends LinearOpMode {
      *  @param robot - object used to get the gyro readings and where the file is stored
      *  @param driverSpot - determines the position of the driver and how much to add to the gyro adjust
      */
-    public void writeToFile(Hardware robot, String driverSpot){
+    public void writeToFile(Hardware robot, String angle){
         //makes a new (or clears the) text file
         try {
             robot.exportData = new FileHelper();
@@ -215,13 +215,8 @@ class AutoMethods extends LinearOpMode {
         }
         //write to the text file
         try {
-            //writes firstAngle from gyro orientation (look in MecanumDrive class for other examples)
-            Orientation angles = robot.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-            double firstAngle = angles.firstAngle;
-            firstAngle += Math.PI/4;
-            if(driverSpot.equals("Depot"))
-                firstAngle += Math.PI/2;
-            robot.exportData.writeToFile(""+firstAngle);
+
+            robot.exportData.writeToFile(""+angle);
         } catch (IOException e) {
             telemetry.addLine("IOException in file writing: \n"+e);
             telemetry.update();

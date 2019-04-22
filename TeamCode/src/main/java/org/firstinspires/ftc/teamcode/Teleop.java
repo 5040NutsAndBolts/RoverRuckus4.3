@@ -96,6 +96,8 @@ public class Teleop extends OpMode {
     public void start() {
         //starts the threads runs run()
         collection = new Collection(robot);
+        collection.wristPos = collection.wristDownPos;
+        collection.collect = true;
         t1.start();
         t2.start();
         // creates a new reference for the file and parses the line to a double
@@ -106,11 +108,13 @@ public class Teleop extends OpMode {
         try {
             driveTrain.adjust = Double.parseDouble(robot.exportData.readFromFile());
             robot.exportData.clearFile();
-            //writeToFile(robot);
+
         } catch (Exception e) {
             driveTrain.adjust = 0;
             //robot.resetMotors();
-        }robot.scoringStop.setPosition(0);
+        }
+        robot.scoringStop.setPosition(0);
+        robot.hang.setTargetPosition(6089);
 
     }
 
