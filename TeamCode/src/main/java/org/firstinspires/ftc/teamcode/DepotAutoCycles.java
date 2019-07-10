@@ -104,6 +104,10 @@ public class DepotAutoCycles extends AutoMethods {
         time.reset();
         while(time.seconds() < 0.2 && opModeIsActive()){}
 
+        if(goldPos == 2){
+            collection.wristPos = collection.wristDownPos;
+        }
+
         power = 0;
         driveTrain.powerSet(power);
         driveTrain.forwardInch(13);
@@ -133,13 +137,40 @@ public class DepotAutoCycles extends AutoMethods {
             }
 
         }
-        collection.wristPos = collection.wristDownPos;
 
         if(goldPos == 1) {
-            runToRotateWait(-45,robot,driveTrain);
+            power = 0;
+            driveTrain.powerSet(power);
+            driveTrain.rotate(-45);
+            while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.addData("power", power);
+                telemetry.update();
+                power+=0.1;
+                driveTrain.powerSet(power);
+                if(Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 200){
+                    collection.wristPos = collection.wristDownPos;
+                }
+            }
         }
         else if(goldPos == 3){
-            runToRotateWait(45,robot,driveTrain);
+            power = 0;
+            driveTrain.powerSet(power);
+            driveTrain.rotate(45);
+            while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.addData("power", power);
+                telemetry.update();
+                power+=0.1;
+                driveTrain.powerSet(power);
+                if(Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 200){
+                    collection.wristPos = collection.wristDownPos;
+                }
+            }
         }
         if(goldPos != 2) {
             robot.intake.setPower(-0.25);
@@ -169,7 +200,13 @@ public class DepotAutoCycles extends AutoMethods {
 
             power = 0;
             driveTrain.powerSet(power);
-            int rDegrees = 0;
+            int rDegrees;
+            if(goldPos == 1) {
+                rDegrees = 15*9;
+            }
+            else {
+                rDegrees = -15*9;
+            }
             robot.leftDriveFront.setTargetPosition(rDegrees);
             robot.leftDriveRear.setTargetPosition(rDegrees);
             robot.rightDriveFront.setTargetPosition(-rDegrees);
@@ -186,6 +223,9 @@ public class DepotAutoCycles extends AutoMethods {
                     robot.intake.setPower(0);
                 }
             }
+
+            driveTrain.forwardInch(0);
+            driveTrain.powerSet(1);
 
             //makes sure slide is all the way out and drops the TM.
             while(Math.abs(robot.collectionSlide.getTargetPosition()-robot.collectionSlide.getCurrentPosition()) > 10 && opModeIsActive()) {
@@ -218,7 +258,7 @@ public class DepotAutoCycles extends AutoMethods {
         robot.intake.setPower(0);
 
         //rotates to face Crater to go pick up minerals
-        runToRotateWait(-85,robot,driveTrain);
+        runToRotateWait(-90,robot,driveTrain);
 
 
         //drive to crater
@@ -226,7 +266,7 @@ public class DepotAutoCycles extends AutoMethods {
         runToRotateWait(-50,robot,driveTrain);
 
         //moves diagnolly so we know where is is located up against the Crater.
-        power = 1;
+        /*power = 1;
         driveTrain.resetMotors();
         robot.leftDriveFront.setTargetPosition(1200);
         robot.rightDriveRear.setTargetPosition(1200);
@@ -241,9 +281,14 @@ public class DepotAutoCycles extends AutoMethods {
             telemetry.update();
             driveTrain.powerSet(power);
         }
+        */
+
+        runToSidewaysWait(-5,robot,driveTrain);
+        runToForwardWait(20,robot,driveTrain);
 
         driveTrain.powerSet(0.5);
-        driveTrain.sidewaysInch(-3);
+        driveTrain.sidewaysInch(-7);
+
 
         //sets wrist down and starts intaking
         robot.intake.setPower(-1);
@@ -273,7 +318,7 @@ public class DepotAutoCycles extends AutoMethods {
         //moves back to go to lander
         power = 0;
         driveTrain.powerSet(power);
-        driveTrain.forwardInch(-9.5);
+        driveTrain.forwardInch(-7.5);
         while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
             telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
             telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
@@ -343,7 +388,7 @@ public class DepotAutoCycles extends AutoMethods {
 
         runToForwardWait(16,robot,driveTrain);
 
-        runToRotateWait(-85,robot,driveTrain);
+        runToRotateWait(-87,robot,driveTrain);
         runToForwardWait(49,robot,driveTrain);
         robot.scoringSlide.setTargetPosition(0);
         robot.scoringSlide.setPower(0.5);
@@ -352,7 +397,7 @@ public class DepotAutoCycles extends AutoMethods {
 
         runToForwardWait(15,robot,driveTrain);
 
-        collection.wristPos = 0.4;
+        collection.wristPos = collection.wristDownPos;
         time.reset();
         while(time.seconds() < 0.5 && opModeIsActive()){}
         t1.interrupt();

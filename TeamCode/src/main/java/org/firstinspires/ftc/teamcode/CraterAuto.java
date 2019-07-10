@@ -134,13 +134,41 @@ public class CraterAuto extends AutoMethods {
             }
 
         }
-        collection.wristPos = collection.wristDownPos;
 
+        collection.wristPos = collection.wristDownPos;
         if(goldPos == 1) {
-            runToRotateWait(-45,robot,driveTrain);
+            power = 0;
+            driveTrain.powerSet(power);
+            driveTrain.rotate(-45);
+            while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.addData("power", power);
+                telemetry.update();
+                power+=0.1;
+                driveTrain.powerSet(power);
+                if(Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 200){
+                    collection.wristPos = collection.wristDownPos;
+                }
+            }
         }
         else if(goldPos == 3){
-            runToRotateWait(45,robot,driveTrain);
+            power = 0;
+            driveTrain.powerSet(power);
+            driveTrain.rotate(45);
+            while (Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 20 && opModeIsActive()) {
+                telemetry.addData("rightDriveFront pos", robot.rightDriveFront.getCurrentPosition());
+                telemetry.addData("rightDriveFront target pos", robot.rightDriveFront.getTargetPosition());
+                telemetry.addData("collection slide current Pos",robot.collectionSlide.getCurrentPosition());
+                telemetry.addData("power", power);
+                telemetry.update();
+                power+=0.1;
+                driveTrain.powerSet(power);
+                if(Math.abs(robot.rightDriveFront.getTargetPosition()-robot.rightDriveFront.getCurrentPosition()) > 200){
+                    collection.wristPos = collection.wristDownPos;
+                }
+            }
         }
         if(goldPos != 2) {
             robot.intake.setPower(1);
@@ -164,7 +192,7 @@ public class CraterAuto extends AutoMethods {
         }
         power = 0;
         driveTrain.powerSet(power);
-        int rDegrees = -84*9;
+        int rDegrees = -86*9;
         robot.leftDriveFront.setTargetPosition(rDegrees);
         robot.leftDriveRear.setTargetPosition(rDegrees);
         robot.rightDriveFront.setTargetPosition(-rDegrees);
@@ -184,9 +212,9 @@ public class CraterAuto extends AutoMethods {
         robot.intake.setPower(0);
 
         time.reset();
-        while(time.seconds() < 0.5 && opModeIsActive()){}
+        while(time.seconds() < 7.5 && opModeIsActive()){}
 
-        runToForwardWait(50,robot,driveTrain);
+        runToForwardWait(49,robot,driveTrain);
 
         runToRotateWait(-60,robot,driveTrain);
         collection.wristPos = collection.wristDownPos;
@@ -217,7 +245,7 @@ public class CraterAuto extends AutoMethods {
 
         runToForwardWait(45,robot,driveTrain);
 
-        collection.wristPos = 0.4;
+        collection.wristPos = collection.wristDownPos;
 
         time.reset();
         while(time.seconds() < 0.5 && opModeIsActive()){}

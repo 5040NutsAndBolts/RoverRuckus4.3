@@ -15,8 +15,8 @@ public class Collection {
     private boolean resetToggle = false;
 
     public boolean collect = false;
-    public double wristDownPos = 0;
-    public double wristUpPos = 0.85;
+    public double wristDownPos = 0.16;
+    public double wristUpPos = 0.84;
     public double wristPos = wristUpPos;
     public boolean canTransfer = false;
 
@@ -35,19 +35,16 @@ public class Collection {
      */
 
 
-    public void wrist(boolean toggle)
-    {
-
-        wristSetPosition(wristPos);
-        if(robot.collectionSlide.getCurrentPosition() > 500) {
+    public void wrist(boolean toggle) {
+        /*if(robot.collectionSlide.getCurrentPosition() > 500) {
             robot.scoringSlide.setTargetPosition(0);
             wristPos=wristDownPos;
             collect = true;
-        }
-        else if(toggle && !wristToggle) {
+        }*/
+        if(toggle && !wristToggle) {
             wristToggle = true;
 
-            if(robot.wristLeft.getPosition() == wristDownPos)
+            if(robot.wristRight.getPosition() == wristDownPos)
             {
                 wristPos=wristUpPos;
             }
@@ -60,6 +57,13 @@ public class Collection {
         else if(!toggle && wristToggle) {
             wristToggle = false;
         }
+
+        /*if(wristPos==wristUpPos && robot.collectionSlide.getCurrentPosition() > 100) {
+            wristPos = 0.5;
+        }
+        else if(wristPos==0.5 && robot.collectionSlide.getCurrentPosition() < 100) {
+            wristPos=wristUpPos;
+        }*/
     }
 
     public void wristSetPosition(double pos) {
@@ -81,7 +85,7 @@ public class Collection {
             robot.intake.setPower(0.7);
         }
         else if(robot.intakeDetector.alpha() > 200 && robot.scoringSlide.getPower() != 1 &&
-                robot.wristLeft.getPosition() == wristUpPos && canTransfer){
+                robot.wristRight.getPosition() == wristUpPos && canTransfer){
             robot.intake.setPower(-0.8);
             robot.intakeStop.setPosition(0.37);
             //slide(true,false);
