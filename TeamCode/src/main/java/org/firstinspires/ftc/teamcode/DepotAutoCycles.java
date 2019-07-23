@@ -400,9 +400,9 @@ public class DepotAutoCycles extends AutoMethods {
         collection.wristPos = collection.wristDownPos;
         time.reset();
         while(time.seconds() < 0.5 && opModeIsActive()){}
+
         t1.interrupt();
         t2.interrupt();
-
         if(driverSpot.equals("Depot")) {
             writeToFile(robot, "-2.115");
         }

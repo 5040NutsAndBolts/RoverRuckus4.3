@@ -202,7 +202,7 @@ class AutoMethods extends LinearOpMode {
     /**
      *  This method creates the file that the gyro angle is written to and writes that
      *  @param robot - object used to get the gyro readings and where the file is stored
-     *  @param driverSpot - determines the position of the driver and how much to add to the gyro adjust
+     *  @param angle - determines the position of the driver and how much to add to the gyro adjust
      */
     public void writeToFile(Hardware robot, String angle){
         //makes a new (or clears the) text file

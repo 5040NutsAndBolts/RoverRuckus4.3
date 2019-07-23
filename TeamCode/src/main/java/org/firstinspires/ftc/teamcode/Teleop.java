@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.media.MediaPlayer;
+import android.os.Environment;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
@@ -28,6 +29,9 @@ public class Teleop extends OpMode {
     private LiftMechanism lifter;
     private Collection collection;
     private Controllers controllers;
+
+    private MediaPlayer mp;
+    private String soundError;
 
     private boolean brake = false;
 
@@ -56,6 +60,7 @@ public class Teleop extends OpMode {
         lifter = new LiftMechanism(robot);
         mineralScorer = new MineralScorer(robot);
         controllers = new Controllers();
+        mp = new MediaPlayer();
     }
 
     /**
@@ -76,6 +81,13 @@ public class Teleop extends OpMode {
         robot.imu = hardwareMap.get(BNO055IMU.class, "imu");
         robot.imu.initialize(parameters);
         robot.imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
+        try {
+            mp.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Fortnite.mp3");
+            mp.prepare();
+        } catch(Exception e){
+            soundError = e.toString();
+        }
     }
 
     /**
@@ -85,6 +97,8 @@ public class Teleop extends OpMode {
     @Override
     public void init_loop() {
         telemetry.addData("imu calabration", robot.imu.isGyroCalibrated());
+        if(soundError != null && !soundError.isEmpty())
+            telemetry.addData("Err", soundError);
         telemetry.update();
     }
 
@@ -211,5 +225,7 @@ public class Teleop extends OpMode {
     public void stop() {
         t1.interrupt();
         t2.interrupt();
+        if(soundError != null && !soundError.isEmpty())
+            mp.start();
     }
 }
